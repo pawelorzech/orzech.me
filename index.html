@@ -70,9 +70,25 @@
             opacity: 1;
             transition: opacity 0.3s ease-in;
         }
+
+        /* Star animation for dark mode */
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        .star {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: twinkle 2s infinite ease-in-out alternate;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body class="bg-blue-50 dark:bg-gray-900 text-gray-800 flex items-center justify-center min-h-screen transition-colors duration-300">
+
+    <div id="star-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
 
     <div id="theme-switcher" class="switcher absolute top-4 left-4 flex space-x-3">
         <button id="theme-light" class="text-2xl">☀️</button>
@@ -208,10 +224,46 @@
             document.getElementById('theme-system').classList.toggle('active', theme === 'system');
         };
 
+        const isNightTime = () => {
+            const hour = new Date().getHours();
+            return hour >= 20 || hour < 6; // 8 PM to 5:59 AM
+        };
+
         const setTheme = (theme) => {
             localStorage.setItem('theme', theme);
             updateThemeButtons(theme);
             applyTheme(); // Re-apply the theme logic
+            // Only create stars if in dark mode AND it's night time
+            if (document.documentElement.classList.contains('dark') && isNightTime()) {
+                createStars();
+            } else {
+                removeStars();
+            }
+        };
+
+        // --- STAR ANIMATION LOGIC ---
+        const createStars = () => {
+            const starContainer = document.getElementById('star-container');
+            starContainer.innerHTML = ''; // Clear existing stars
+            const numStars = 25; // Further reduced number of stars
+
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 1.5 + 0.5; // 0.5 to 2px, even smaller
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 8}s`; // Even longer random delay
+                star.style.animationDuration = `${Math.random() * 6 + 3}s`; // Even slower random duration
+                starContainer.appendChild(star);
+            }
+        };
+
+        const removeStars = () => {
+            const starContainer = document.getElementById('star-container');
+            starContainer.innerHTML = ''; // Remove all stars
         };
 
         // --- ON LOAD INITIALIZATION ---
@@ -229,6 +281,11 @@
             // Initialize Theme
             const savedTheme = localStorage.getItem('theme') || 'system';
             updateThemeButtons(savedTheme);
+            // Call applyTheme and createStars initially based on savedTheme
+            applyTheme();
+            if (document.documentElement.classList.contains('dark') && isNightTime()) {
+                createStars();
+            }
 
             // Add event listeners
             document.getElementById('lang-pl').addEventListener('click', () => setLanguage('pl'));
