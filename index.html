@@ -60,6 +60,29 @@
             filter: grayscale(0);
             box-shadow: 0 2px 8px rgba(0,0,0,0.15); /* More prominent shadow for active */
         }
+
+        /* Thanos Snap Animations */
+        @keyframes snap-out {
+            0% { opacity: 1; transform: scale(1) translateY(0) rotate(0deg); }
+            100% { opacity: 0; transform: scale(0.5) translateY(50px) rotate(30deg); filter: blur(5px); }
+        }
+
+        @keyframes snap-in {
+            0% { opacity: 0; transform: scale(0.5) translateY(-50px) rotate(-30deg); filter: blur(5px); }
+            100% { opacity: 1; transform: scale(1) translateY(0) rotate(0deg); filter: blur(0); }
+        }
+
+        .snap-out-char {
+            display: inline-block;
+            animation: snap-out 0.6s forwards;
+            will-change: transform, opacity, filter;
+        }
+
+        .snap-in-char {
+            display: inline-block;
+            animation: snap-in 0.6s forwards;
+            will-change: transform, opacity, filter;
+        }
     </style>
 </head>
 <body class="bg-blue-50 dark:bg-gray-900 text-gray-800 flex items-center justify-center min-h-screen transition-colors duration-300">
@@ -116,9 +139,49 @@
         const setLanguage = (lang) => {
             document.documentElement.lang = lang;
             document.title = translations[lang].page_title;
-            document.querySelectorAll('[data-translate-key]').forEach(el => {
-                el.innerHTML = translations[lang][el.getAttribute('data-translate-key')];
+
+            const elementsToTranslate = document.querySelectorAll('[data-translate-key]');
+
+            elementsToTranslate.forEach(el => {
+                const key = el.getAttribute('data-translate-key');
+                const currentText = el.innerHTML;
+                const newText = translations[lang][key];
+
+                // If the text is the same, no animation needed
+                if (currentText === newText) {
+                    return;
+                }
+
+                // Create spans for current text and animate out
+                let delay = 0;
+                const chars = currentText.split('');
+                el.innerHTML = ''; // Clear current content
+
+                chars.forEach((char, index) => {
+                    const span = document.createElement('span');
+                    span.className = 'snap-out-char';
+                    span.style.animationDelay = `${delay}ms`;
+                    span.textContent = char;
+                    el.appendChild(span);
+                    delay += 30; // Delay for each character
+                });
+
+                // After animation out, replace with new text and animate in
+                setTimeout(() => {
+                    el.innerHTML = ''; // Clear after snap-out
+                    let newDelay = 0;
+                    const newChars = newText.split('');
+                    newChars.forEach((char, index) => {
+                        const span = document.createElement('span');
+                        span.className = 'snap-in-char';
+                        span.style.animationDelay = `${newDelay}ms`;
+                        span.textContent = char;
+                        el.appendChild(span);
+                        newDelay += 30; // Delay for each new character
+                    });
+                }, delay + 100); // Wait for all snap-out animations + a little extra
             });
+
             document.getElementById('lang-pl').classList.toggle('active', lang === 'pl');
             document.getElementById('lang-en').classList.toggle('active', lang === 'en');
             localStorage.setItem('language', lang);
