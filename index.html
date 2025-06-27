@@ -90,6 +90,7 @@
         <h1 data-translate-key="title" class="text-5xl md:text-7xl font-bold tracking-tight text-blue-900 dark:text-blue-200">
             Paulina i Paweł Orzech
         </h1>
+        <p id="current-time" class="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-4"></p>
 
         <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 text-lg text-blue-800 dark:text-blue-300">
             <a href="mailto:paulina@orzech.me" class="hover:text-blue-600 dark:hover:text-blue-400 hover:scale-105 transition-all duration-300">
@@ -119,8 +120,52 @@
     <script>
         // --- TRANSLATION LOGIC ---
         const translations = {
-            pl: { title: "Paulina i Paweł Orzech", pawel_blog: "Blog Pawła", paulina_page: "Strona Pauliny", copyright: "&copy; 2025 Paulina i Paweł Orzech. Wszelkie prawa zastrzeżone.", page_title: "Paulina i Paweł Orzech" },
-            en: { title: "Paulina & Paweł Orzech", pawel_blog: "Paweł's Blog", paulina_page: "Paulina's Page", copyright: "&copy; 2025 Paulina & Paweł Orzech. All rights reserved.", page_title: "Paulina & Paweł Orzech" }
+            pl: {
+                title: "Paulina i Paweł Orzech",
+                pawel_blog: "Blog Pawła",
+                paulina_page: "Strona Pauliny",
+                copyright: "&copy; 2025 Paulina i Paweł Orzech. Wszelkie prawa zastrzeżone.",
+                page_title: "Paulina i Paweł Orzech",
+                time_format: "HH:mm",
+                time_prefix: "Hej, aktualnie jest"
+            },
+            en: {
+                title: "Paulina & Paweł Orzech",
+                pawel_blog: "Paweł's Blog",
+                paulina_page: "Paulina's Page",
+                copyright: "&copy; 2025 Paulina & Paweł Orzech. All rights reserved.",
+                page_title: "Paulina & Paweł Orzech",
+                time_format: "h:mm A",
+                time_prefix: "Hey, it's currently"
+            }
+        };
+
+        const updateTimeDisplay = () => {
+            const now = new Date();
+            const currentLang = document.documentElement.lang;
+            const timeFormat = translations[currentLang].time_format;
+            const timePrefix = translations[currentLang].time_prefix;
+
+            const options = {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: timeFormat.includes('A') // Use 12-hour format if 'A' is in time_format
+            };
+
+            let formattedTime = now.toLocaleTimeString(currentLang, options);
+
+            // Determine emoji based on hour
+            const hour = now.getHours();
+            let emoji;
+            if (hour >= 6 && hour < 18) { // 6 AM to 5:59 PM
+                emoji = '☀️';
+            } else if (hour >= 18 && hour < 20) { // 6 PM to 7:59 PM (sunset)
+                emoji = '🌇';
+            } else { // 8 PM to 5:59 AM
+                emoji = '🌙';
+            }
+
+            document.getElementById('current-time').textContent = `${timePrefix} ${formattedTime} ${emoji}`;
         };
 
         const setLanguage = (lang) => {
@@ -147,6 +192,9 @@
                     }, 300); // Remove fade-in class after animation
                 }, 300); // Wait for fade-out to complete
             });
+
+            // Update time display when language changes
+            updateTimeDisplay();
 
             document.getElementById('lang-pl').classList.toggle('active', lang === 'pl');
             document.getElementById('lang-en').classList.toggle('active', lang === 'en');
@@ -191,6 +239,9 @@
 
             // Listen for system theme changes
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
+
+            // Update time every minute
+            setInterval(updateTimeDisplay, 60000);
         });
     </script>
 
