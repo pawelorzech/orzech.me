@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<!-- The 'dark' class will be managed by JS -->
+<html lang="pl" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paulina i Paweł Orzech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <script>
+        // Set Tailwind to use class-based dark mode
+        tailwind.config = {
+            darkMode: 'class'
+        }
+
+        // Run this script before the body renders to prevent theme flickering
+        const applyTheme = () => {
+            const theme = localStorage.getItem('theme') || 'system';
+            const themeSwitcher = document.getElementById('theme-switcher');
+            
+            if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        };
+        applyTheme();
+    </script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .animate-on-load {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .animate-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .switcher button {
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            filter: grayscale(50%);
+        }
+        .switcher .active {
+            transform: scale(1.15);
+            filter: grayscale(0);
+        }
+    </style>
+</head>
+<body class="bg-blue-50 dark:bg-gray-900 text-gray-800 flex items-center justify-center min-h-screen transition-colors duration-300">
+
+    <div id="theme-switcher" class="switcher absolute top-4 left-4 flex space-x-3">
+        <button id="theme-light" class="text-2xl">☀️</button>
+        <button id="theme-dark" class="text-2xl">🌙</button>
+        <button id="theme-system" class="text-2xl">💻</button>
+    </div>
+
+    <div class="switcher absolute top-4 right-4 flex space-x-3">
+        <button id="lang-pl" class="text-2xl">🇵🇱</button>
+        <button id="lang-en" class="text-2xl">🇬🇧</button>
+    </div>
+
+    <main id="content" class="animate-on-load text-center p-8 space-y-10">
+        
+        <h1 data-translate-key="title" class="text-5xl md:text-7xl font-bold tracking-tight text-blue-900 dark:text-blue-200">
+            Paulina i Paweł Orzech
+        </h1>
+
+        <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 text-lg text-blue-800 dark:text-blue-300">
+            <a href="mailto:paulina@orzech.me" class="hover:text-blue-600 dark:hover:text-blue-400 hover:scale-105 transition-all duration-300">
+                paulina@orzech.me
+            </a>
+            <a href="mailto:pawel@orzech.me" class="hover:text-blue-600 dark:hover:text-blue-400 hover:scale-105 transition-all duration-300">
+                pawel@orzech.me
+            </a>
+        </div>
+
+        <div class="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 text-lg pt-6">
+            <a href="https://pawel.orzech.me" target="_blank" rel="noopener noreferrer" 
+               class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-8 py-4 rounded-2xl shadow-lg hover:shadow-xl dark:hover:bg-blue-800 hover:bg-blue-200 hover:scale-105 transition-all duration-300 font-semibold">
+                <span data-translate-key="pawel_blog">Blog Pawła</span>
+            </a>
+            <div class="bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-400 px-8 py-4 rounded-2xl cursor-not-allowed shadow-md">
+                <span data-translate-key="paulina_page">Strona Pauliny</span>
+            </div>
+        </div>
+
+    </main>
+
+    <footer id="footer" class="animate-on-load absolute bottom-4 text-center w-full text-sm text-gray-500 dark:text-gray-400">
+        <p data-translate-key="copyright">&copy; 2025 Paulina i Paweł Orzech. Wszelkie prawa zastrzeżone.</p>
+    </footer>
+
+    <script>
+        // --- TRANSLATION LOGIC ---
+        const translations = {
+            pl: { title: "Paulina i Paweł Orzech", pawel_blog: "Blog Pawła", paulina_page: "Strona Pauliny", copyright: "&copy; 2025 Paulina i Paweł Orzech. Wszelkie prawa zastrzeżone.", page_title: "Paulina i Paweł Orzech" },
+            en: { title: "Paulina & Paweł Orzech", pawel_blog: "Paweł's Blog", paulina_page: "Paulina's Page", copyright: "&copy; 2025 Paulina & Paweł Orzech. All rights reserved.", page_title: "Paulina & Paweł Orzech" }
+        };
+
+        const setLanguage = (lang) => {
+            document.documentElement.lang = lang;
+            document.title = translations[lang].page_title;
+            document.querySelectorAll('[data-translate-key]').forEach(el => {
+                el.innerHTML = translations[lang][el.getAttribute('data-translate-key')];
+            });
+            document.getElementById('lang-pl').classList.toggle('active', lang === 'pl');
+            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+            localStorage.setItem('language', lang);
+        };
+
+        // --- THEME LOGIC ---
+        const updateThemeButtons = (theme) => {
+            document.getElementById('theme-light').classList.toggle('active', theme === 'light');
+            document.getElementById('theme-dark').classList.toggle('active', theme === 'dark');
+            document.getElementById('theme-system').classList.toggle('active', theme === 'system');
+        };
+
+        const setTheme = (theme) => {
+            localStorage.setItem('theme', theme);
+            updateThemeButtons(theme);
+            applyTheme(); // Re-apply the theme logic
+        };
+
+        // --- ON LOAD INITIALIZATION ---
+        window.addEventListener('load', () => {
+            // Animate content
+            const content = document.getElementById('content');
+            const footer = document.getElementById('footer');
+            setTimeout(() => content.classList.add('animate-in'), 100);
+            setTimeout(() => footer.classList.add('animate-in'), 400);
+
+            // Initialize Language
+            const savedLang = localStorage.getItem('language') || 'pl';
+            setLanguage(savedLang);
+
+            // Initialize Theme
+            const savedTheme = localStorage.getItem('theme') || 'system';
+            updateThemeButtons(savedTheme);
+
+            // Add event listeners
+            document.getElementById('lang-pl').addEventListener('click', () => setLanguage('pl'));
+            document.getElementById('lang-en').addEventListener('click', () => setLanguage('en'));
+            document.getElementById('theme-light').addEventListener('click', () => setTheme('light'));
+            document.getElementById('theme-dark').addEventListener('click', () => setTheme('dark'));
+            document.getElementById('theme-system').addEventListener('click', () => setTheme('system'));
+
+            // Listen for system theme changes
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
+        });
+    </script>
+
+</body>
+</html>
