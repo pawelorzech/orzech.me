@@ -47,10 +47,18 @@
             cursor: pointer;
             transition: all 0.2s ease-in-out;
             filter: grayscale(50%);
+            border-radius: 9999px; /* Make them round */
+            padding: 0.25rem; /* Add some padding */
+        }
+        .switcher button:hover {
+            transform: scale(1.25); /* Slightly larger on hover */
+            filter: grayscale(0); /* Full color on hover */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Subtle shadow on hover */
         }
         .switcher .active {
             transform: scale(1.15);
             filter: grayscale(0);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15); /* More prominent shadow for active */
         }
     </style>
 </head>
