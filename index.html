@@ -79,6 +79,23 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.15); /* More prominent shadow for active */
         }
 
+        /* Wiggle animation for GitHub link */
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(2deg); }
+            50% { transform: rotate(-2deg); }
+            75% { transform: rotate(2deg); }
+        }
+
+        .github-link {
+            font-size: 0.875rem; /* Smaller font size */
+            color: #9CA3AF; /* Less contrasting color */
+        }
+
+        .github-link:hover {
+            animation: wiggle 0.5s ease-in-out infinite; /* Increased duration for more noticeable wiggle */
+        }
+
         /* Fade animation for language change */
         .fade-out {
             opacity: 0;
@@ -246,6 +263,7 @@
 
     <footer id="footer" class="animate-on-load absolute bottom-4 text-center w-full text-sm text-gray-500 dark:text-gray-400">
         <p data-translate-key="copyright">&copy; 2025 Paulina i Paweł Orzech. Wszelkie prawa zastrzeżone.</p>
+        <p class="mt-2"><a href="https://github.com/pawelorzech/orzech.me" target="_blank" rel="noopener noreferrer" class="github-link hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300" data-translate-key="github_link">View on GitHub</a></p>
     </footer>
 
     <script>
@@ -258,7 +276,8 @@
                 copyright: "&copy; 2025 Paulina i Paweł Orzech. Wszelkie prawa zastrzeżone.",
                 page_title: "Paulina i Paweł Orzech",
                 time_format: "HH:mm",
-                time_prefix: "Hej, aktualnie jest"
+                time_prefix: "Hej, aktualnie jest",
+                github_link: "GitHub"
             },
             en: {
                 title: "Paulina & Paweł Orzech",
@@ -267,7 +286,8 @@
                 copyright: "&copy; 2025 Paulina & Paweł Orzech. All rights reserved.",
                 page_title: "Paulina & Paweł Orzech",
                 time_format: "h:mm A",
-                time_prefix: "Hey, it's currently"
+                time_prefix: "Hey, it's currently",
+                github_link: "GitHub"
             }
         };
 
