@@ -164,12 +164,45 @@
         .sun.visible {
             opacity: 1;
         }
+
+        /* Moon animation for dark mode */
+        @keyframes moon-glow {
+            0%, 100% { box-shadow: 0 0 20px 8px rgba(200, 200, 255, 0.2); }
+            50% { box-shadow: 0 0 40px 15px rgba(200, 200, 255, 0.4); }
+        }
+
+        @keyframes moon-drift {
+            0% { transform: translate(-50%, -50%); }
+            25% { transform: translate(-48%, -49%); }
+            50% { transform: translate(-52%, -51%); }
+            75% { transform: translate(-49%, -48%); }
+            100% { transform: translate(-50%, -50%); }
+        }
+
+        .moon {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            width: 150px; /* Slightly smaller than sun */
+            height: 150px;
+            background: radial-gradient(circle, #E0E0E0, #B0B0B0); /* Greyish white */
+            border-radius: 50%;
+            animation: moon-glow 6s infinite alternate, moon-drift 20s infinite ease-in-out;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .moon.visible {
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-r from-blue-50 to-blue-100 dark:bg-gradient-to-r dark:from-gray-900 dark:to-gray-800 text-gray-800 flex items-center justify-center min-h-screen transition-colors duration-300">
 
     <div id="star-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
     <div id="sun-container" class="absolute top-0 left-0 w-full h-1/2 overflow-hidden pointer-events-none"></div>
+    <div id="moon-container" class="absolute top-0 left-0 w-full h-1/2 overflow-hidden pointer-events-none"></div>
 
     <div id="theme-switcher" class="switcher absolute top-4 left-4 flex space-x-3">
         <button id="theme-light" class="text-2xl">☀️</button>
@@ -323,24 +356,26 @@
             if (isDarkMode && isCurrentlyNight) {
                 createStars();
                 startShootingStars();
-                toggleSun(false);
+                toggleCelestialBodies(false, true);
             } else if (!isDarkMode) {
                 removeStars();
                 stopShootingStars();
-                toggleSun(true);
+                toggleCelestialBodies(true, false);
             } else {
                 removeStars();
                 stopShootingStars();
-                toggleSun(false);
+                toggleCelestialBodies(false, false);
             }
         };
 
         // --- SUN LOGIC ---
-        const toggleSun = (show) => {
+        const toggleCelestialBodies = (showSun, showMoon) => {
             const sunContainer = document.getElementById('sun-container');
             let sunElement = document.getElementById('animated-sun');
+            const moonContainer = document.getElementById('moon-container');
+            let moonElement = document.getElementById('animated-moon');
 
-            if (show) {
+            if (showSun) {
                 if (!sunElement) {
                     sunElement = document.createElement('div');
                     sunElement.id = 'animated-sun';
@@ -351,6 +386,20 @@
             } else {
                 if (sunElement) {
                     sunElement.classList.remove('visible');
+                }
+            }
+
+            if (showMoon) {
+                if (!moonElement) {
+                    moonElement = document.createElement('div');
+                    moonElement.id = 'animated-moon';
+                    moonElement.className = 'moon';
+                    moonContainer.appendChild(moonElement);
+                }
+                moonElement.classList.add('visible');
+            } else {
+                if (moonElement) {
+                    moonElement.classList.remove('visible');
                 }
             }
         };
@@ -447,15 +496,15 @@
             if (isDarkModeInitial && isCurrentlyNightInitial) {
                 createStars();
                 startShootingStars();
-                toggleSun(false);
+                toggleCelestialBodies(false, true);
             } else if (!isDarkModeInitial) {
                 removeStars();
                 stopShootingStars();
-                toggleSun(true);
+                toggleCelestialBodies(true, false);
             } else {
                 removeStars();
                 stopShootingStars();
-                toggleSun(false);
+                toggleCelestialBodies(false, false);
             }
 
             // Add event listeners
@@ -474,15 +523,15 @@
                     if (isDarkMode && isCurrentlyNight) {
                         createStars();
                         startShootingStars();
-                        toggleSun(false);
+                        toggleCelestialBodies(false, true);
                     } else if (!isDarkMode) {
                         removeStars();
                         stopShootingStars();
-                        toggleSun(true);
+                        toggleCelestialBodies(true, false);
                     } else {
                         removeStars();
                         stopShootingStars();
-                        toggleSun(false);
+                        toggleCelestialBodies(false, false);
                     }
                 }
             });
