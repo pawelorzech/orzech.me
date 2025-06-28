@@ -98,6 +98,15 @@
             animation: wiggle 0.5s ease-in-out infinite; /* Increased duration for more noticeable wiggle */
         }
 
+        .nut-emoji {
+            display: inline-block;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .nut-emoji:hover {
+            transform: scale(1.4) rotate(10deg);
+        }
+
         /* Fade animation for language change */
         .fade-out {
             opacity: 0;
@@ -271,7 +280,7 @@
             <span data-translate-key="copyright">&copy; 2025 Paulina i Paweł Orzech. Wszelkie prawa zastrzeżone.</span>
             <span class="hidden md:inline md:mx-2">|</span>
             <a href="https://github.com/pawelorzech/orzech.me" target="_blank" rel="noopener noreferrer" class="github-link hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300" data-translate-key="github_link">GitHub</a>
-            <span class="ml-1">🌰</span>
+            <span class="ml-1 nut-emoji">🌰</span>
         </p>
     </footer>
 
