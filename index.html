@@ -398,6 +398,35 @@
             return hour >= 20 || hour < 6; // 8 PM to 5:59 AM
         };
 
+        const updateBackgroundColor = () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.body.style.background = '';
+                return;
+            }
+
+            const hour = new Date().getHours();
+            let fromColor, toColor;
+
+            if (hour >= 5 && hour < 7) { // Dawn
+                fromColor = '#FFDAB9'; // PeachPuff
+                toColor = '#87CEEB'; // SkyBlue
+            } else if (hour >= 7 && hour < 12) { // Morning
+                fromColor = '#87CEFA'; // LightSkyBlue
+                toColor = '#B0E0E6'; // PowderBlue
+            } else if (hour >= 12 && hour < 17) { // Afternoon
+                fromColor = '#ADD8E6'; // LightBlue
+                toColor = '#F0E68C'; // Khaki
+            } else if (hour >= 17 && hour < 19) { // Dusk
+                fromColor = '#FFA07A'; // LightSalmon
+                toColor = '#20B2AA'; // LightSeaGreen
+            } else { // Evening/Night (fallback for light mode)
+                fromColor = '#E6E6FA'; // Lavender
+                toColor = '#D8BFD8'; // Thistle
+            }
+
+            document.body.style.background = `linear-gradient(to right, ${fromColor}, ${toColor}`;
+        };
+
         const setTheme = (theme) => {
             localStorage.setItem('theme', theme);
             updateThemeButtons(theme);
@@ -414,6 +443,7 @@
                 removeStars();
                 stopShootingStars();
                 toggleCelestialBodies(true, false);
+                updateBackgroundColor();
             } else {
                 removeStars();
                 stopShootingStars();
