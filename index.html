@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <!-- The 'dark' class will be managed by JS -->
 <html lang="pl" class="">
@@ -83,6 +84,33 @@
             border-radius: 50%;
             animation: twinkle 2s infinite ease-in-out alternate;
             pointer-events: none;
+        }
+
+        /* Shooting star animation */
+        @keyframes shoot {
+            0% {
+                transform: translate(0, 0) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(200px, 200px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .shooting-star {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8));
+            border-radius: 50%;
+            filter: blur(1px);
+            animation: shoot 2s linear forwards;
+            pointer-events: none;
+            transform-origin: 0% 0%;
         }
     </style>
 </head>
@@ -218,6 +246,8 @@
         };
 
         // --- THEME LOGIC ---
+        let shootingStarInterval; // Declare interval variable
+
         const updateThemeButtons = (theme) => {
             document.getElementById('theme-light').classList.toggle('active', theme === 'light');
             document.getElementById('theme-dark').classList.toggle('active', theme === 'dark');
@@ -233,11 +263,16 @@
             localStorage.setItem('theme', theme);
             updateThemeButtons(theme);
             applyTheme(); // Re-apply the theme logic
-            // Only create stars if in dark mode AND it's night time
-            if (document.documentElement.classList.contains('dark') && isNightTime()) {
+            
+            const isDarkMode = document.documentElement.classList.contains('dark');
+            const isCurrentlyNight = isNightTime();
+
+            if (isDarkMode && isCurrentlyNight) {
                 createStars();
+                startShootingStars();
             } else {
                 removeStars();
+                stopShootingStars();
             }
         };
 
@@ -266,6 +301,49 @@
             starContainer.innerHTML = ''; // Remove all stars
         };
 
+        // --- SHOOTING STAR LOGIC ---
+        const createShootingStar = () => {
+            const starContainer = document.getElementById('star-container');
+            const shootingStar = document.createElement('div');
+            shootingStar.className = 'shooting-star';
+            
+            // Random start position (top-left quadrant for diagonal movement)
+            const startX = Math.random() * window.innerWidth * 0.7; // Up to 70% of width
+            const startY = Math.random() * window.innerHeight * 0.3; // Up to 30% of height
+            shootingStar.style.left = `${startX}px`;
+            shootingStar.style.top = `${startY}px`;
+
+            // Random duration for animation
+            shootingStar.style.animationDuration = `${Math.random() * 1.5 + 1}s`; // 1 to 2.5 seconds
+            shootingStar.style.animationDelay = `${Math.random() * 0.5}s`; // Small random delay
+
+            starContainer.appendChild(shootingStar);
+
+            // Remove the shooting star after its animation to prevent DOM clutter
+            shootingStar.addEventListener('animationend', () => {
+                shootingStar.remove();
+            });
+        };
+
+        const startShootingStars = () => {
+            if (!shootingStarInterval) {
+                shootingStarInterval = setInterval(() => {
+                    if (document.documentElement.classList.contains('dark') && isNightTime()) {
+                        createShootingStar();
+                    } else {
+                        stopShootingStars(); // Stop if conditions are no longer met
+                    }
+                }, 30000); // Every 30 seconds
+            }
+        };
+
+        const stopShootingStars = () => {
+            if (shootingStarInterval) {
+                clearInterval(shootingStarInterval);
+                shootingStarInterval = null;
+            }
+        };
+
         // --- ON LOAD INITIALIZATION ---
         window.addEventListener('load', () => {
             // Animate content
@@ -281,10 +359,11 @@
             // Initialize Theme
             const savedTheme = localStorage.getItem('theme') || 'system';
             updateThemeButtons(savedTheme);
-            // Call applyTheme and createStars initially based on savedTheme
+            // Call applyTheme and createStars/ShootingStars initially based on savedTheme and time
             applyTheme();
             if (document.documentElement.classList.contains('dark') && isNightTime()) {
                 createStars();
+                startShootingStars();
             }
 
             // Add event listeners
