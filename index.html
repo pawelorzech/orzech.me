@@ -273,6 +273,8 @@
             </div>
         </div>
 
+        <div id="mastodon-feed" class="text-sm text-gray-600 dark:text-gray-400 pt-6"></div>
+
     </main>
 
     <footer id="footer" class="animate-on-load absolute bottom-4 text-center w-full px-8 text-sm text-gray-500 dark:text-gray-400">
@@ -591,7 +593,57 @@
 
             // Update time every minute
             setInterval(updateTimeDisplay, 60000);
+
+            // Fetch Mastodon feed
+            fetchMastodonFeed();
         });
+
+        // --- MASTODON FEED LOGIC ---
+        const fetchMastodonFeed = () => {
+            const feedContainer = document.getElementById('mastodon-feed');
+            const rssUrl = 'https://wspanialy.eu/users/pawel.rss';
+            // Using a different CORS proxy
+            const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(rssUrl)}`;
+
+            fetch(proxyUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Network response was not ok. Status: ${response.status}`);
+                    }
+                    return response.text(); // Get the response as raw text
+                })
+                .then(str => {
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(str, "application/xml");
+
+                    const parserError = xmlDoc.querySelector("parsererror");
+                    if (parserError) {
+                        console.error("XML Parsing Error:", parserError.textContent);
+                        throw new Error("Failed to parse XML feed.");
+                    }
+
+                    const items = xmlDoc.querySelectorAll("item");
+                    if (items.length > 0) {
+                        const latestPost = items[0];
+                        const description = latestPost.querySelector("description").textContent;
+                        const link = latestPost.querySelector("link").textContent;
+
+                        feedContainer.innerHTML = `
+                            <p class="font-semibold mb-2 text-left">Ostatni wpis z Mastodona:</p>
+                            <div class="p-4 border rounded-lg shadow-md bg-white dark:bg-gray-700 text-left">
+                                ${description}
+                                <a href="${link}" target="_blank" rel="noopener noreferrer" class="text-blue-500 dark:text-blue-400 hover:underline block mt-2">Zobacz na Mastodonie</a>
+                            </div>
+                        `;
+                    } else {
+                        throw new Error("No <item> elements found in the RSS feed.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching Mastodon feed:', error);
+                    feedContainer.innerHTML = '<p>Nie można załadować wpisu z Mastodona.</p>';
+                });
+        };
     </script>
 
 </body>
