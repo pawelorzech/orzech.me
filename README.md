@@ -16,7 +16,9 @@ This is the personal landing page for Paulina and Paweł Orzech. It's a simple, 
     - A "wiggle" animation on the GitHub link in the footer on hover.
     - The nut emoji (🌰) in the footer grows and rotates on hover.
 - **Responsive Design:** The layout is fully responsive and adapts to different screen sizes, from mobile phones to desktops.
-- **SEO Friendly:** Includes meta tags for description and keywords to improve search engine visibility.
+- **Accessibility Features:** Full ARIA label support, semantic HTML structure, and keyboard navigation friendly.
+- **SEO Optimized:** Comprehensive meta tags including Open Graph, Twitter Cards, canonical URLs, and structured data for improved search engine visibility and social media sharing.
+- **Performance Optimized:** Clean, efficient code with optimized animations and minimal resource usage.
 - **Modern Tech Stack:** Built with HTML, Tailwind CSS, and vanilla JavaScript, ensuring a lightweight and fast experience.
 
 ## 🛠️ How It Works

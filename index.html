@@ -8,6 +8,15 @@
     <title>Paulina i Paweł Orzech</title>
     <meta name="description" content="Oficjalna strona Pauliny i Pawła Orzech. Znajdź informacje kontaktowe, linki do bloga Pawła i innych projektów.">
     <meta name="keywords" content="Paulina Orzech, Paweł Orzech, orzech.me, blog, strona osobista, kontakt, programowanie, fotografia">
+    <meta property="og:title" content="Paulina i Paweł Orzech">
+    <meta property="og:description" content="Oficjalna strona Pauliny i Pawła Orzech. Znajdź informacje kontaktowe, linki do bloga Pawła i innych projektów.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://orzech.me">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Paulina i Paweł Orzech">
+    <meta name="twitter:description" content="Oficjalna strona Pauliny i Pawła Orzech. Znajdź informacje kontaktowe, linki do bloga Pawła i innych projektów.">
+    <meta name="author" content="Paweł Orzech">
+    <link rel="canonical" href="https://orzech.me">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌰</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -159,11 +168,6 @@
             z-index: 2; /* Ensure head is above trail */
         }
 
-        
-
-        
-
-        
 
         /* Sun animation for light mode */
         @keyframes sun-glow {
@@ -236,18 +240,18 @@
     <div id="sun-container" class="absolute top-0 left-0 w-full h-1/2 overflow-hidden pointer-events-none"></div>
     <div id="moon-container" class="absolute top-0 left-0 w-full h-1/2 overflow-hidden pointer-events-none"></div>
 
-    <div id="theme-switcher" class="switcher absolute top-4 left-4 flex space-x-3">
-        <button id="theme-light" class="text-2xl">☀️</button>
-        <button id="theme-dark" class="text-2xl">🌙</button>
-        <button id="theme-system" class="text-2xl">💻</button>
+    <div id="theme-switcher" class="switcher absolute top-4 left-4 flex space-x-3" role="group" aria-label="Theme selector">
+        <button id="theme-light" class="text-2xl" aria-label="Light theme" title="Light theme">☀️</button>
+        <button id="theme-dark" class="text-2xl" aria-label="Dark theme" title="Dark theme">🌙</button>
+        <button id="theme-system" class="text-2xl" aria-label="System theme" title="System theme">💻</button>
     </div>
 
-    <div class="switcher absolute top-4 right-4 flex space-x-3">
-        <button id="lang-pl" class="text-2xl">🇵🇱</button>
-        <button id="lang-en" class="text-2xl">🇬🇧</button>
+    <div class="switcher absolute top-4 right-4 flex space-x-3" role="group" aria-label="Language selector">
+        <button id="lang-pl" class="text-2xl" aria-label="Polski" title="Polski">🇵🇱</button>
+        <button id="lang-en" class="text-2xl" aria-label="English" title="English">🇬🇧</button>
     </div>
 
-    <main id="content" class="animate-on-load text-center p-8 space-y-10">
+    <main id="content" class="animate-on-load text-center p-8 space-y-10" role="main">
         
         <h1 data-translate-key="title" class="text-5xl md:text-7xl font-bold tracking-tight text-blue-900 dark:text-blue-200">
             Paulina i Paweł Orzech
@@ -273,11 +277,11 @@
             </div>
         </div>
 
-        <div id="mastodon-feed" class="text-sm text-gray-600 dark:text-gray-400 pt-6"></div>
+        <section id="mastodon-feed" class="text-sm text-gray-600 dark:text-gray-400 pt-6" aria-label="Latest Mastodon post"></section>
 
     </main>
 
-    <footer id="footer" class="animate-on-load absolute bottom-4 text-center w-full px-8 text-sm text-gray-500 dark:text-gray-400">
+    <footer id="footer" class="animate-on-load absolute bottom-4 text-center w-full px-8 text-sm text-gray-500 dark:text-gray-400" role="contentinfo">
         <p class="flex flex-col md:flex-row items-center justify-center">
             <span data-translate-key="copyright">&copy; 2025 Paulina i Paweł Orzech. Wszelkie prawa zastrzeżone.</span>
             <span class="hidden md:inline md:mx-2">|</span>
@@ -628,11 +632,15 @@
                         const description = latestPost.querySelector("description").textContent;
                         const link = latestPost.querySelector("link").textContent;
 
+                        const currentLang = document.documentElement.lang;
+                        const title = currentLang === 'pl' ? 'Ostatni wpis z Mastodona:' : 'Latest Mastodon post:';
+                        const linkText = currentLang === 'pl' ? 'Zobacz na Mastodonie' : 'View on Mastodon';
+                        
                         feedContainer.innerHTML = `
-                            <p class="font-semibold mb-2 text-left">Ostatni wpis z Mastodona:</p>
+                            <p class="font-semibold mb-2 text-left">${title}</p>
                             <div class="p-4 border rounded-lg shadow-md bg-white dark:bg-gray-700 text-left">
                                 ${description}
-                                <a href="${link}" target="_blank" rel="noopener noreferrer" class="text-blue-500 dark:text-blue-400 hover:underline block mt-2">Zobacz na Mastodonie</a>
+                                <a href="${link}" target="_blank" rel="noopener noreferrer" class="text-blue-500 dark:text-blue-400 hover:underline block mt-2">${linkText}</a>
                             </div>
                         `;
                     } else {
@@ -641,7 +649,11 @@
                 })
                 .catch(error => {
                     console.error('Error fetching Mastodon feed:', error);
-                    feedContainer.innerHTML = '<p>Nie można załadować wpisu z Mastodona.</p>';
+                    const currentLang = document.documentElement.lang;
+                    const errorMsg = currentLang === 'pl' 
+                        ? '<p>Nie można załadować wpisu z Mastodona.</p>'
+                        : '<p>Unable to load Mastodon post.</p>';
+                    feedContainer.innerHTML = errorMsg;
                 });
         };
     </script>
