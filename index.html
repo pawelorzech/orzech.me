@@ -30,6 +30,13 @@
         }
 
         // Run this script before the body renders to prevent theme flickering
+        /**
+         * Applies the selected theme (light, dark, or system) to the entire page.
+         * It reads the theme preference from localStorage. If the theme is 'dark', or if it's 'system'
+         * and the user's OS prefers a dark color scheme, it adds the 'dark' class to the <html> element.
+         * Otherwise, it removes the 'dark' class. It also toggles the 'light-mode-animated' class on the body
+         * to enable/disable the light mode background animation, preventing flickering on load.
+         */
         const applyTheme = () => {
             const theme = localStorage.getItem('theme') || 'system';
             const themeSwitcher = document.getElementById('theme-switcher');
@@ -317,6 +324,12 @@
             }
         };
 
+        /**
+         * Updates the time display on the page.
+         * This function gets the current time, formats it based on the selected language (12-hour or 24-hour),
+         * and selects a relevant emoji based on the time of day. It then updates the text content of the
+         * `#current-time` element with a greeting and the formatted time.
+         */
         const updateTimeDisplay = () => {
             const now = new Date();
             const currentLang = document.documentElement.lang;
@@ -351,6 +364,15 @@
             document.getElementById('current-time').textContent = `${timePrefix} ${formattedTime} ${emoji}`;
         };
 
+        /**
+         * Sets the display language for the entire page.
+         * This function updates the `lang` attribute of the <html> element, changes the page title, and
+         * iterates over all elements with a `data-translate-key` attribute to set their text content
+         * based on the `translations` object. It also updates the tooltip for Paulina's page button
+         * and refreshes the time display to match the new language's format. The selected language is
+         * persisted to localStorage.
+         * @param {string} lang - The language to set. Must be a key in the `translations` object (e.g., 'pl' or 'en').
+         */
         const setLanguage = (lang) => {
             document.documentElement.lang = lang;
             document.title = translations[lang].page_title;
@@ -393,17 +415,37 @@
         // --- THEME LOGIC ---
         let shootingStarInterval; // Declare interval variable
 
+        /**
+         * Updates the visual state of the theme switcher buttons.
+         * This function toggles the 'active' class on the theme buttons (light, dark, system)
+         * to visually indicate which theme is currently selected.
+         * @param {string} theme - The currently active theme ('light', 'dark', or 'system').
+         */
         const updateThemeButtons = (theme) => {
             document.getElementById('theme-light').classList.toggle('active', theme === 'light');
             document.getElementById('theme-dark').classList.toggle('active', theme === 'dark');
             document.getElementById('theme-system').classList.toggle('active', theme === 'system');
         };
 
+        /**
+         * Checks if the current time is considered "night time".
+         * Night time is defined as being between 8 PM (20:00) and 5:59 AM.
+         * This is used to determine if night-specific animations like stars should be displayed.
+         * @returns {boolean} True if it is night time, false otherwise.
+         */
         const isNightTime = () => {
             const hour = new Date().getHours();
             return hour >= 20 || hour < 6; // 8 PM to 5:59 AM
         };
 
+        /**
+         * Sets the application theme and manages associated background effects.
+         * This function saves the chosen theme to localStorage, updates the theme button states,
+         * and calls `applyTheme` to change the page's appearance. It then orchestrates the
+         * background animations, such as creating or removing stars and showing/hiding the
+         * sun or moon, based on whether the theme is dark and if it's currently night time.
+         * @param {string} theme - The theme to set ('light', 'dark', or 'system').
+         */
         const setTheme = (theme) => {
             localStorage.setItem('theme', theme);
             updateThemeButtons(theme);
@@ -428,6 +470,14 @@
         };
 
         // --- SUN LOGIC ---
+        /**
+         * Manages the visibility of the animated sun and moon elements.
+         * This function dynamically creates the sun or moon element if it doesn't exist,
+         * and then adds or removes the 'visible' class to show or hide them with a fade effect.
+         * This ensures that the DOM is not cluttered with unused elements.
+         * @param {boolean} showSun - Whether to show the sun element.
+         * @param {boolean} showMoon - Whether to show the moon element.
+         */
         const toggleCelestialBodies = (showSun, showMoon) => {
             const sunContainer = document.getElementById('sun-container');
             let sunElement = document.getElementById('animated-sun');
@@ -464,6 +514,12 @@
         };
 
         // --- STAR ANIMATION LOGIC ---
+        /**
+         * Creates and displays animated stars in the background.
+         * This function populates the `#star-container` element with a number of `div` elements,
+         * each styled to look like a twinkling star. The stars are given random sizes, positions,
+         * and animation delays to create a natural, non-uniform appearance.
+         */
         const createStars = () => {
             const starContainer = document.getElementById('star-container');
             starContainer.innerHTML = ''; // Clear existing stars
@@ -483,12 +539,24 @@
             }
         };
 
+        /**
+         * Removes all star elements from the page.
+         * This function clears the content of the `#star-container`, effectively removing
+         * all dynamically created stars from the DOM. This is used when switching away from
+         * the dark theme.
+         */
         const removeStars = () => {
             const starContainer = document.getElementById('star-container');
             starContainer.innerHTML = ''; // Remove all stars
         };
 
         // --- SHOOTING STAR LOGIC ---
+        /**
+         * Creates a single shooting star and adds it to the star container.
+         * The star is a `div` element with random starting coordinates, animation duration,
+         * and a slight delay to create a more natural effect. It is automatically removed
+         * from the DOM after its animation completes to prevent clutter.
+         */
         const createShootingStar = () => {
             const starContainer = document.getElementById('star-container');
             const shootingStar = document.createElement('div');
@@ -512,6 +580,12 @@
             });
         };
 
+        /**
+         * Starts an interval to create shooting stars periodically.
+         * If the interval is not already running, it sets one up to call `createShootingStar`
+         * every 9 seconds, but only if the page is in dark mode and it is currently night time.
+         * If conditions are no longer met, it automatically stops the interval.
+         */
         const startShootingStars = () => {
             if (!shootingStarInterval) {
                 shootingStarInterval = setInterval(() => {
@@ -524,6 +598,11 @@
             }
         };
 
+        /**
+         * Stops the interval for creating shooting stars.
+         * This function clears the `shootingStarInterval` and sets the tracking variable to null,
+         * preventing new shooting stars from being created.
+         */
         const stopShootingStars = () => {
             if (shootingStarInterval) {
                 clearInterval(shootingStarInterval);
@@ -532,6 +611,18 @@
         };
 
         // --- ON LOAD INITIALIZATION ---
+        /**
+         * Main initialization block that runs when the page is fully loaded.
+         * This function is the entry point for all dynamic functionality. It orchestrates:
+         * - The initial fade-in animation of the main content and footer.
+         * - Setting the language based on localStorage or default.
+         * - Setting the theme based on localStorage or default.
+         * - Initializing all background animations (stars, sun, moon) based on the theme and time.
+         * - Attaching all necessary event listeners for language and theme switching.
+         * - Setting up a listener for changes in the system's preferred color scheme.
+         * - Starting the interval to update the clock every minute.
+         * - Triggering the initial fetch of the Mastodon feed.
+         */
         window.addEventListener('load', () => {
             // Animate content
             const content = document.getElementById('content');
@@ -603,6 +694,13 @@
         });
 
         // --- MASTODON FEED LOGIC ---
+        /**
+         * Fetches the latest post from a Mastodon RSS feed and displays it on the page.
+         * It uses a CORS proxy to bypass browser restrictions on cross-origin requests.
+         * The function parses the XML response, extracts the content and link of the latest post,
+         * and injects it into the `#mastodon-feed` container. It includes localized titles
+         * and provides user-friendly error messages in the container if the fetch or parsing fails.
+         */
         const fetchMastodonFeed = () => {
             const feedContainer = document.getElementById('mastodon-feed');
             const rssUrl = 'https://wspanialy.eu/users/pawel.rss';
