@@ -32,3 +32,7 @@ The entire site is a single `index.html` file, making it extremely portable and 
     - The background animations (sun, moon, stars) are created and managed with JavaScript. Elements are dynamically added or removed from the DOM based on the current theme and time of day.
     - CSS keyframe animations are used for the twinkling stars, shooting stars, sun/moon glow and drift, and other interactive effects.
 - **On-Load Initialization:** A `window.addEventListener('load', ...)` function initializes the theme, language, and all event listeners for the interactive elements once the page has fully loaded.
+
+## 💻 Code Documentation
+
+All JavaScript functions within `index.html` are fully documented using JSDoc-style comments. This provides a clear explanation of each function's purpose, parameters, and behavior, making the codebase easier to understand and maintain.
