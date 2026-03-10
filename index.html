@@ -1,7 +1,5 @@
-
 <!DOCTYPE html>
-<!-- The 'dark' class will be managed by JS -->
-<html lang="pl" class="">
+<html lang="pl" data-theme="green">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,645 +16,1223 @@
     <meta name="author" content="Paweł Orzech">
     <link rel="canonical" href="https://orzech.me">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌰</text></svg>">
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
-    <script>
-        // Set Tailwind to use class-based dark mode
-        tailwind.config = {
-            darkMode: 'class'
-        }
-
-        // Run this script before the body renders to prevent theme flickering
-        const applyTheme = () => {
-            const theme = localStorage.getItem('theme') || 'system';
-            const themeSwitcher = document.getElementById('theme-switcher');
-            
-            if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-                document.body.classList.remove('light-mode-animated');
-            } else {
-                document.documentElement.classList.remove('dark');
-                document.body.classList.add('light-mode-animated');
-            }
-        };
-        applyTheme();
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
 
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-size: 200% 200%;
-        }
+    /* ==========================================================================
+       RETRO 90s TERMINAL — Stylesheet
+       ========================================================================== */
 
-        @keyframes wind-breeze {
-            0% { background-position: 0% 50%; }
-            25% { background-position: 100% 0%; }
-            50% { background-position: 0% 100%; }
-            75% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+    /* --- CSS Custom Properties / Themes --- */
+    :root,
+    [data-theme="green"] {
+        --bg: #0a0a0a;
+        --text: #00ff41;
+        --text-dim: #00aa2a;
+        --accent: #00ffff;
+        --glow: rgba(0, 255, 65, 0.4);
+        --border: #00aa2a;
+    }
 
-        body.light-mode-animated {
-            animation: wind-breeze 30s ease infinite;
-            background-size: 400% 400%; /* Increase background size to allow more movement */
-        }
-        .animate-on-load {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-        .animate-in {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .switcher button {
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            filter: grayscale(50%);
-            border-radius: 9999px; /* Make them round */
-            padding: 0.25rem; /* Add some padding */
-        }
-        .switcher button:hover {
-            transform: scale(1.25); /* Slightly larger on hover */
-            filter: grayscale(0); /* Full color on hover */
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Subtle shadow on hover */
-        }
-        .switcher .active {
-            transform: scale(1.15);
-            filter: grayscale(0);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15); /* More prominent shadow for active */
-        }
+    [data-theme="amber"] {
+        --bg: #0a0a0a;
+        --text: #ffb000;
+        --text-dim: #aa7500;
+        --accent: #ffff00;
+        --glow: rgba(255, 176, 0, 0.4);
+        --border: #aa7500;
+    }
 
-        /* Wiggle animation for GitHub link */
-        @keyframes wiggle {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(2deg); }
-            50% { transform: rotate(-2deg); }
-            75% { transform: rotate(2deg); }
-        }
+    [data-theme="hacker"] {
+        --bg: #0a0a0a;
+        --text: #00ff41;
+        --text-dim: #00aa2a;
+        --accent: #ff00ff;
+        --glow: rgba(0, 255, 65, 0.6);
+        --border: #00aa2a;
+    }
 
-        .github-link {
-            font-size: 0.875rem; /* Smaller font size */
-            color: #9CA3AF; /* Less contrasting color */
-        }
+    [data-theme="web90s"] {
+        --bg: #008080;
+        --text: #ffff00;
+        --text-dim: #cccc00;
+        --accent: #ff00ff;
+        --glow: rgba(255, 255, 0, 0.3);
+        --border: #ffff00;
+    }
 
-        .github-link:hover {
-            animation: wiggle 0.5s ease-in-out infinite; /* Increased duration for more noticeable wiggle */
-        }
+    /* --- Base --- */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        .nut-emoji {
-            display: inline-block;
-            transition: transform 0.2s ease-in-out;
-        }
+    body {
+        font-family: 'VT323', 'Courier New', monospace;
+        font-size: 1.25rem;
+        line-height: 1.6;
+        background-color: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        overflow-x: hidden;
+        position: relative;
+        animation: flicker 4s infinite;
+    }
 
-        .nut-emoji:hover {
-            transform: scale(1.4) rotate(10deg);
-        }
+    /* --- CRT Scanlines --- */
+    body::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        pointer-events: none;
+        background: repeating-linear-gradient(
+            to bottom,
+            transparent 0px,
+            transparent 2px,
+            rgba(0, 0, 0, 0.12) 2px,
+            rgba(0, 0, 0, 0.12) 3px
+        );
+    }
 
-        /* Fade animation for language change */
-        .fade-out {
-            opacity: 0;
-            transition: opacity 0.3s ease-out;
-        }
-        .fade-in {
-            opacity: 1;
-            transition: opacity 0.3s ease-in;
-        }
+    /* --- Vignette --- */
+    body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        z-index: 9998;
+        pointer-events: none;
+        background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.55) 100%);
+    }
 
-        /* Star animation for dark mode */
-        @keyframes twinkle {
-            0%, 100% { opacity: 0; transform: scale(0.5); }
-            50% { opacity: 1; transform: scale(1); }
-        }
+    /* --- Chromatic aberration --- */
+    p, li, span, div, a, label {
+        text-shadow:
+            0.5px 0 0 rgba(255, 0, 0, 0.25),
+            -0.5px 0 0 rgba(0, 0, 255, 0.25);
+    }
 
-        .star {
-            position: absolute;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            animation: twinkle 2s infinite ease-in-out alternate;
-            pointer-events: none;
-        }
+    /* --- Heading glow --- */
+    h1 {
+        color: var(--text);
+        text-shadow:
+            0 0 10px var(--glow),
+            0 0 20px var(--glow),
+            0.5px 0 0 rgba(255, 0, 0, 0.2),
+            -0.5px 0 0 rgba(0, 0, 255, 0.2);
+    }
 
-        /* Shooting star animation */
-        @keyframes shoot {
-            0% {
-                transform: translate(0, 0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            100% {
-                transform: translate(200px, 200px);
-                opacity: 0;
-            }
-        }
+    /* --- Links --- */
+    a {
+        color: var(--accent);
+        text-decoration: none;
+        transition: all 0.15s ease;
+    }
+    a:hover {
+        background-color: var(--accent);
+        color: var(--bg);
+        text-shadow: none;
+    }
+    a:focus-visible {
+        outline: 2px dashed var(--accent);
+        outline-offset: 2px;
+    }
 
-        .shooting-star {
-            position: absolute;
-            width: 4px; /* Small, round head */
-            height: 4px;
-            background-color: #FFD700; /* Gold-like color for the core */
-            border-radius: 50%;
-            filter: blur(0.5px); /* Slight blur for softness */
-            animation: shoot 2s linear forwards;
-            pointer-events: none;
-            transform-origin: center center; /* Center of the head */
-            z-index: 2; /* Ensure head is above trail */
-        }
+    /* --- Selection --- */
+    ::selection {
+        background-color: var(--text);
+        color: var(--bg);
+    }
 
+    /* ==========================================================================
+       TERMINAL WINDOW
+       ========================================================================== */
 
-        /* Sun animation for light mode */
-        @keyframes sun-glow {
-            0%, 100% { box-shadow: 0 0 20px 8px rgba(255, 255, 200, 0.4); }
-            50% { box-shadow: 0 0 40px 15px rgba(255, 255, 200, 0.7); }
-        }
+    .terminal-window {
+        background-color: var(--bg);
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        box-shadow:
+            inset 0 0 80px rgba(0, 0, 0, 0.5),
+            0 0 30px var(--glow),
+            0 4px 30px rgba(0, 0, 0, 0.8);
+        max-width: 900px;
+        margin: 2rem auto;
+        overflow: hidden;
+        position: relative;
+        z-index: 1;
+    }
 
-        @keyframes sun-drift {
-            0% { transform: translate(-50%, -50%); }
-            25% { transform: translate(-48%, -49%); }
-            50% { transform: translate(-52%, -51%); }
-            75% { transform: translate(-49%, -48%); }
-            100% { transform: translate(-50%, -50%); }
-        }
+    .terminal-titlebar {
+        background-color: var(--text-dim);
+        color: var(--bg);
+        padding: 8px 16px;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+        user-select: none;
+    }
 
-        .sun {
-            position: absolute;
-            top: 10%;
-            left: 50%;
-            width: 180px; /* Slightly larger for more presence */
-            height: 180px;
-            background: radial-gradient(circle, #FFFACD, #FFEFD5); /* Pastel yellow to peach */
-            border-radius: 50%;
-            animation: sun-glow 6s infinite alternate, sun-drift 20s infinite ease-in-out;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-        }
+    .titlebar-title {
+        font-weight: bold;
+        letter-spacing: 1px;
+        font-size: 1.1rem;
+        white-space: nowrap;
+    }
 
-        .sun.visible {
-            opacity: 1;
-        }
+    .titlebar-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
 
-        /* Moon animation for dark mode */
-        @keyframes moon-glow {
-            0%, 100% { box-shadow: 0 0 20px 8px rgba(200, 200, 255, 0.2); }
-            50% { box-shadow: 0 0 40px 15px rgba(200, 200, 255, 0.4); }
-        }
+    .titlebar-window-btns {
+        display: flex;
+        gap: 4px;
+        font-size: 1.1rem;
+        opacity: 0.7;
+    }
 
-        @keyframes moon-drift {
-            0% { transform: translate(-50%, -50%); }
-            25% { transform: translate(-48%, -49%); }
-            50% { transform: translate(-52%, -51%); }
-            75% { transform: translate(-49%, -48%); }
-            100% { transform: translate(-50%, -50%); }
-        }
+    .titlebar-window-btns span {
+        cursor: default;
+        text-shadow: none;
+    }
 
-        .moon {
-            position: absolute;
-            top: 10%;
-            left: 50%;
-            width: 150px; /* Slightly smaller than sun */
-            height: 150px;
-            background: radial-gradient(circle, #E0E0E0, #B0B0B0); /* Greyish white */
-            border-radius: 50%;
-            animation: moon-glow 6s infinite alternate, moon-drift 20s infinite ease-in-out;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-        }
+    .terminal-body {
+        padding: 1.5rem;
+        min-height: 300px;
+    }
 
-        .moon.visible {
-            opacity: 1;
+    /* --- Terminal sections --- */
+    .terminal-section {
+        margin-bottom: 1rem;
+    }
+
+    .terminal-title {
+        font-family: 'Press Start 2P', 'Courier New', monospace;
+        font-size: 1.6rem;
+        display: inline;
+        line-height: 1.8;
+    }
+
+    .prompt {
+        color: var(--text);
+        font-weight: bold;
+    }
+
+    .command {
+        color: var(--accent);
+        margin-right: 0.5rem;
+    }
+
+    .terminal-line {
+        margin-bottom: 0.3rem;
+    }
+
+    .terminal-link {
+        color: var(--accent);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+
+    .ascii-separator {
+        color: var(--text-dim);
+        overflow: hidden;
+        margin: 1rem 0;
+        opacity: 0.5;
+        letter-spacing: -1px;
+    }
+
+    /* --- Navigation buttons --- */
+    .terminal-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    .terminal-btn {
+        display: inline-block;
+        border: 2px solid var(--border);
+        padding: 10px 20px;
+        color: var(--text);
+        transition: all 0.15s ease;
+        text-decoration: none;
+        font-family: 'VT323', monospace;
+        font-size: 1.25rem;
+        cursor: pointer;
+    }
+    .terminal-btn:hover {
+        background-color: var(--text);
+        color: var(--bg);
+        box-shadow: 0 0 12px var(--glow);
+        text-shadow: none;
+    }
+    .terminal-btn.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        position: relative;
+    }
+    .terminal-btn.disabled:hover {
+        background-color: transparent;
+        color: var(--text);
+        box-shadow: none;
+    }
+
+    /* --- Theme & Language buttons --- */
+    .theme-btn, .lang-btn {
+        font-family: 'VT323', monospace;
+        font-size: 1rem;
+        background: transparent;
+        color: var(--bg);
+        border: 1px solid var(--bg);
+        padding: 2px 8px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .theme-btn:hover, .lang-btn:hover {
+        background-color: var(--bg);
+        color: var(--text);
+        box-shadow: 0 0 8px var(--glow);
+    }
+    .theme-btn.active, .lang-btn.active {
+        background-color: var(--bg);
+        color: var(--text);
+        font-weight: bold;
+        box-shadow: 0 0 12px var(--glow);
+    }
+
+    /* ==========================================================================
+       RETRO ELEMENTS
+       ========================================================================== */
+
+    /* --- Under construction --- */
+    .under-construction {
+        display: inline-block;
+        background: repeating-linear-gradient(
+            45deg,
+            #000000 0px, #000000 10px,
+            #ffcc00 10px, #ffcc00 20px
+        );
+        color: #000;
+        padding: 2px 10px;
+        font-size: 0.9rem;
+        margin-left: 0.5rem;
+        vertical-align: middle;
+    }
+    .under-construction-text {
+        background: #ffcc00;
+        padding: 1px 6px;
+        text-shadow: none;
+        color: #000;
+    }
+
+    /* --- Visitor counter --- */
+    .visitor-section {
+        text-align: center;
+        padding: 0.5rem 0;
+    }
+    .visitor-counter {
+        display: inline-block;
+        border: 3px ridge var(--text-dim);
+        padding: 4px 12px;
+        font-size: 1.5rem;
+        letter-spacing: 4px;
+        background: #000;
+        color: var(--text);
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.8);
+        margin-left: 0.5rem;
+    }
+
+    /* --- Marquee --- */
+    .marquee-container {
+        overflow: hidden;
+        margin: 1rem 0;
+        border-top: 1px dashed var(--text-dim);
+        border-bottom: 1px dashed var(--text-dim);
+        padding: 4px 0;
+    }
+    .marquee-text {
+        display: inline-block;
+        white-space: nowrap;
+        animation: marquee 20s linear infinite;
+        color: var(--accent);
+        font-size: 1rem;
+    }
+
+    /* --- Command prompt --- */
+    .terminal-prompt {
+        margin-top: 1rem;
+    }
+
+    /* --- Cursor --- */
+    .cursor {
+        display: inline-block;
+        animation: blink-cursor 1.06s step-end infinite;
+        color: var(--text);
+    }
+
+    /* --- Footer --- */
+    .retro-footer {
+        text-align: center;
+        padding: 1rem;
+        font-size: 0.9rem;
+        color: var(--text-dim);
+        position: relative;
+        z-index: 1;
+    }
+    .retro-footer .separator {
+        margin: 0 0.5rem;
+    }
+    .retro-footer a {
+        color: var(--text-dim);
+    }
+    .retro-footer a:hover {
+        color: var(--bg);
+        background-color: var(--text-dim);
+    }
+    .nut-emoji {
+        display: inline-block;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+        margin-left: 0.3rem;
+        font-size: 1.1rem;
+    }
+    .nut-emoji:hover {
+        transform: scale(1.4) rotate(10deg);
+    }
+
+    /* --- Boot screen --- */
+    #boot-screen {
+        position: fixed;
+        inset: 0;
+        background: var(--bg);
+        z-index: 10000;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding: 2rem;
+        overflow: hidden;
+    }
+    #boot-screen.hidden {
+        display: none;
+    }
+    #boot-text {
+        font-family: 'VT323', monospace;
+        font-size: 1.3rem;
+        color: var(--text);
+        white-space: pre-wrap;
+        line-height: 1.8;
+        text-shadow: 0 0 10px var(--glow);
+    }
+
+    /* --- Matrix canvas --- */
+    #matrix-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.12;
+    }
+    #matrix-canvas.hidden {
+        display: none;
+    }
+
+    /* --- Easter egg overlay --- */
+    .easter-egg-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        z-index: 10001;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .easter-egg-overlay.hidden {
+        display: none;
+    }
+    .easter-egg-window {
+        border: 2px solid var(--text);
+        max-width: 350px;
+        width: 90%;
+        box-shadow: 0 0 30px var(--glow);
+    }
+    .easter-egg-window .terminal-titlebar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .easter-egg-window .window-close-btn {
+        background: none;
+        border: 1px solid var(--bg);
+        color: var(--bg);
+        font-family: 'VT323', monospace;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 0 6px;
+    }
+    .easter-egg-window .ascii-art {
+        padding: 1.5rem;
+        background: var(--bg);
+        color: var(--text);
+        text-align: center;
+        font-size: 1.2rem;
+        line-height: 1.3;
+        text-shadow: 0 0 10px var(--glow);
+    }
+
+    /* --- TV static transition --- */
+    .tv-static-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 10002;
+        pointer-events: none;
+        background: #000;
+        animation: tv-static 0.4s ease-out forwards;
+    }
+
+    /* --- Mastodon feed terminal style --- */
+    .mastodon-terminal {
+        font-size: 1rem;
+    }
+    .mastodon-terminal .mastodon-quote {
+        border-left: 3px solid var(--text-dim);
+        padding-left: 1rem;
+        margin: 0.5rem 0;
+        color: var(--text-dim);
+    }
+    .mastodon-terminal a {
+        color: var(--accent);
+        text-decoration: underline;
+    }
+
+    /* --- Glitch effect class --- */
+    .glitch-active {
+        animation: glitch 0.15s ease;
+    }
+
+    /* --- Text utilities --- */
+    .text-glow { text-shadow: 0 0 10px var(--glow), 0 0 20px var(--glow); }
+    .text-dim { color: var(--text-dim); }
+    .text-accent { color: var(--accent); }
+    .hidden { display: none; }
+    .glow-pulse { animation: glow-pulse 2s ease-in-out infinite; }
+
+    /* ==========================================================================
+       KEYFRAME ANIMATIONS
+       ========================================================================== */
+
+    @keyframes blink-cursor {
+        0%, 49.9% { opacity: 1; }
+        50%, 100% { opacity: 0; }
+    }
+
+    @keyframes flicker {
+        0%, 19.9%, 22%, 62.9%, 64%, 100% { opacity: 1; }
+        20%, 21.9% { opacity: 0.97; }
+        63%, 63.9% { opacity: 0.98; }
+    }
+
+    @keyframes glitch {
+        0%, 100% { transform: translateX(0) skewX(0deg); }
+        20% { transform: translateX(-3px) skewX(-0.5deg); }
+        40% { transform: translateX(3px) skewX(0.5deg); }
+        60% { transform: translateX(-2px) skewX(-0.3deg); }
+        80% { transform: translateX(2px) skewX(0.3deg); }
+    }
+
+    @keyframes marquee {
+        0% { transform: translateX(100%); }
+        100% { transform: translateX(-100%); }
+    }
+
+    @keyframes glow-pulse {
+        0%, 100% { text-shadow: 0 0 5px var(--glow), 0 0 10px var(--glow); }
+        50% { text-shadow: 0 0 15px var(--glow), 0 0 30px var(--glow), 0 0 45px var(--glow); }
+    }
+
+    @keyframes tv-static {
+        0% { opacity: 0.8; background: repeating-linear-gradient(0deg, rgba(255,255,255,0.1) 0px, transparent 1px, transparent 2px); }
+        25% { opacity: 0.6; background: repeating-linear-gradient(90deg, rgba(255,255,255,0.08) 0px, transparent 1px, transparent 3px); }
+        50% { opacity: 0.4; background: repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0px, transparent 2px, transparent 4px); }
+        100% { opacity: 0; }
+    }
+
+    @keyframes konami-flash {
+        0% { background: #ff00ff; opacity: 0.8; }
+        25% { background: #00ffff; opacity: 0.6; }
+        50% { background: #ffff00; opacity: 0.8; }
+        75% { background: #00ff41; opacity: 0.6; }
+        100% { opacity: 0; }
+    }
+
+    /* ==========================================================================
+       SCROLLBAR
+       ========================================================================== */
+
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--bg); border-left: 1px solid var(--text-dim); }
+    ::-webkit-scrollbar-thumb { background: var(--text-dim); border: 1px solid var(--text); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text); }
+    * { scrollbar-width: thin; scrollbar-color: var(--text-dim) var(--bg); }
+
+    /* ==========================================================================
+       RESPONSIVE
+       ========================================================================== */
+
+    @media (max-width: 768px) {
+        body { font-size: 1.05rem; }
+        body::after {
+            background: repeating-linear-gradient(to bottom,
+                transparent 0px, transparent 2px,
+                rgba(0, 0, 0, 0.06) 2px, rgba(0, 0, 0, 0.06) 3px);
         }
+        .terminal-window {
+            margin: 0;
+            border-radius: 0;
+            border: none;
+            min-height: 100vh;
+            max-width: 100%;
+            box-shadow: none;
+        }
+        .terminal-body { padding: 1rem; }
+        .terminal-titlebar {
+            font-size: 0.8rem;
+            padding: 6px 10px;
+        }
+        .terminal-title {
+            font-size: 1rem;
+            word-break: break-word;
+        }
+        .titlebar-window-btns { display: none; }
+        .theme-btn, .lang-btn { font-size: 0.85rem; padding: 2px 6px; }
+        .terminal-nav { flex-direction: column; }
+        .terminal-btn { text-align: center; }
+        .visitor-counter { font-size: 1.2rem; letter-spacing: 2px; }
+        .marquee-text { animation-duration: 12s; }
+        #boot-screen { padding: 1rem; }
+        #boot-text { font-size: 1.1rem; }
+    }
+
+    @media (max-width: 400px) {
+        .terminal-title { font-size: 0.8rem; }
+        .titlebar-controls { width: 100%; justify-content: center; }
+    }
+
+    /* ==========================================================================
+       ACCESSIBILITY
+       ========================================================================== */
+
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+        body::after { display: none; }
+        body { animation: none; opacity: 1; }
+        .marquee-text { animation: none; }
+        p, li, span, div, a, label { text-shadow: none; }
+        h1 { text-shadow: 0 0 5px var(--glow); }
+    }
     </style>
 </head>
-<body class="bg-gradient-to-r from-blue-50 to-blue-100 dark:bg-gradient-to-r dark:from-gray-900 dark:to-gray-800 text-gray-800 flex items-center justify-center min-h-screen transition-colors duration-300">
+<body>
 
-    <div id="star-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
-    <div id="sun-container" class="absolute top-0 left-0 w-full h-1/2 overflow-hidden pointer-events-none"></div>
-    <div id="moon-container" class="absolute top-0 left-0 w-full h-1/2 overflow-hidden pointer-events-none"></div>
+<!-- ========== BOOT SCREEN ========== -->
+<div id="boot-screen" aria-live="polite">
+    <div id="boot-text"></div>
+</div>
 
-    <div id="theme-switcher" class="switcher absolute top-4 left-4 flex space-x-3" role="group" aria-label="Theme selector">
-        <button id="theme-light" class="text-2xl" aria-label="Light theme" title="Light theme">☀️</button>
-        <button id="theme-dark" class="text-2xl" aria-label="Dark theme" title="Dark theme">🌙</button>
-        <button id="theme-system" class="text-2xl" aria-label="System theme" title="System theme">💻</button>
-    </div>
+<!-- ========== MATRIX RAIN CANVAS ========== -->
+<canvas id="matrix-canvas" class="hidden" aria-hidden="true"></canvas>
 
-    <div class="switcher absolute top-4 right-4 flex space-x-3" role="group" aria-label="Language selector">
-        <button id="lang-pl" class="text-2xl" aria-label="Polski" title="Polski">🇵🇱</button>
-        <button id="lang-en" class="text-2xl" aria-label="English" title="English">🇬🇧</button>
-    </div>
+<!-- ========== MAIN TERMINAL WINDOW ========== -->
+<main class="terminal-window" id="main-terminal" style="opacity: 0;">
 
-    <main id="content" class="animate-on-load text-center p-8 space-y-10" role="main">
-        
-        <h1 data-translate-key="title" class="text-5xl md:text-7xl font-bold tracking-tight text-blue-900 dark:text-blue-200">
-            Paulina i Paweł Orzech
-        </h1>
-        <p id="current-time" class="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-4"></p>
+    <!-- Terminal Titlebar -->
+    <div class="terminal-titlebar" role="banner">
+        <span class="titlebar-title">ORZECH.ME Terminal v2.0</span>
 
-        <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 text-lg text-blue-800 dark:text-blue-300">
-            <a href="mailto:paulina@orzech.me" class="hover:text-blue-600 dark:hover:text-blue-400 hover:scale-105 transition-all duration-300">
-                paulina@orzech.me
-            </a>
-            <a href="mailto:pawel@orzech.me" class="hover:text-blue-600 dark:hover:text-blue-400 hover:scale-105 transition-all duration-300">
-                pawel@orzech.me
-            </a>
-        </div>
-
-        <div class="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 text-lg pt-6">
-            <a href="https://pawel.orzech.me" target="_blank" rel="noopener noreferrer" 
-               class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-8 py-4 rounded-2xl shadow-lg hover:shadow-xl dark:hover:bg-blue-800 hover:bg-blue-200 hover:scale-105 transition-all duration-300 font-semibold">
-                <span data-translate-key="pawel_blog">Blog Pawła</span>
-            </a>
-            <div class="bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-400 px-8 py-4 rounded-2xl cursor-not-allowed shadow-md">
-                <span data-translate-key="paulina_page">Strona Pauliny</span>
+        <div class="titlebar-controls">
+            <div class="titlebar-themes" role="group" aria-label="Theme selection">
+                <button class="theme-btn active" data-theme="green" aria-label="Green theme">[GREEN]</button>
+                <button class="theme-btn" data-theme="amber" aria-label="Amber theme">[AMBER]</button>
+                <button class="theme-btn" data-theme="hacker" aria-label="Hacker theme">[HACK]</button>
+                <button class="theme-btn" data-theme="web90s" aria-label="90s Web theme">[90s]</button>
+            </div>
+            <div class="titlebar-lang" role="group" aria-label="Language selection">
+                <button class="lang-btn active" data-lang="pl" aria-label="Polski">[PL]</button>
+                <button class="lang-btn" data-lang="en" aria-label="English">[EN]</button>
             </div>
         </div>
 
-        <section id="mastodon-feed" class="text-sm text-gray-600 dark:text-gray-400 pt-6" aria-label="Latest Mastodon post"></section>
+        <div class="titlebar-window-btns" aria-hidden="true">
+            <span>&minus;</span>
+            <span>&square;</span>
+            <span>&times;</span>
+        </div>
+    </div>
 
-    </main>
+    <!-- Terminal Body -->
+    <div class="terminal-body" role="main">
 
-    <footer id="footer" class="animate-on-load absolute bottom-4 text-center w-full px-8 text-sm text-gray-500 dark:text-gray-400" role="contentinfo">
-        <p class="flex flex-col md:flex-row items-center justify-center">
-            <span data-translate-key="copyright">&copy; 2025 Paulina i Paweł Orzech. Wszelkie prawa zastrzeżone.</span>
-            <span class="hidden md:inline md:mx-2">|</span>
-            <a href="https://github.com/pawelorzech/orzech.me" target="_blank" rel="noopener noreferrer" class="github-link hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300" data-translate-key="github_link">GitHub</a>
-            <span class="ml-1 nut-emoji">🌰</span>
-        </p>
-    </footer>
+        <!-- Title -->
+        <section class="terminal-section">
+            <span class="prompt">&gt; </span>
+            <h1 id="main-title" data-translate-key="title" class="terminal-title">Paulina i Paweł Orzech</h1>
+            <span class="cursor">&#9608;</span>
+        </section>
 
-    <script>
-        // --- TRANSLATION LOGIC ---
-        const translations = {
-            pl: {
-                title: "Paulina i Paweł Orzech",
-                pawel_blog: "Blog Pawła",
-                paulina_page: "Strona Pauliny",
-                copyright: "&copy; 2025 Paulina i Paweł Orzech. Wszelkie prawa zastrzeżone.",
-                page_title: "Paulina i Paweł Orzech",
-                time_format: "HH:mm",
-                time_prefix: "Hej, aktualnie jest",
-                github_link: "GitHub",
-                paulina_tooltip: "Paulina jeszcze nie ma strony, ale może kiedyś będzie miała"
-            },
-            en: {
-                title: "Paulina & Paweł Orzech",
-                pawel_blog: "Paweł's Blog",
-                paulina_page: "Paulina's Page",
-                copyright: "&copy; 2025 Paulina & Paweł Orzech. All rights reserved.",
-                page_title: "Paulina & Paweł Orzech",
-                time_format: "h:mm A",
-                time_prefix: "Hey, it's currently",
-                github_link: "GitHub",
-                paulina_tooltip: "Paulina doesn't have a page yet, but maybe she will someday."
-            }
-        };
+        <!-- Clock -->
+        <section class="terminal-section">
+            <span id="current-time" class="text-dim"></span>
+        </section>
 
-        const updateTimeDisplay = () => {
-            const now = new Date();
-            const currentLang = document.documentElement.lang;
-            const timeFormat = translations[currentLang].time_format;
-            const timePrefix = translations[currentLang].time_prefix;
+        <div class="ascii-separator" aria-hidden="true">═══════════════════════════════════════════════</div>
 
-            const options = {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: timeFormat.includes('A') // Use 12-hour format if 'A' is in time_format
-            };
+        <!-- Email Links -->
+        <section class="terminal-section">
+            <div class="terminal-line">
+                <span class="prompt">&gt; </span>
+                <span class="command">mail</span>
+                <a href="mailto:paulina@orzech.me" class="terminal-link" aria-label="Email Paulina">paulina@orzech.me</a>
+            </div>
+            <div class="terminal-line">
+                <span class="prompt">&gt; </span>
+                <span class="command">mail</span>
+                <a href="mailto:pawel@orzech.me" class="terminal-link" aria-label="Email Pawła">pawel@orzech.me</a>
+            </div>
+        </section>
 
-            let formattedTime = now.toLocaleTimeString(currentLang, options);
+        <div class="ascii-separator" aria-hidden="true">═══════════════════════════════════════════════</div>
 
-            // Determine emoji based on hour
-            const hour = now.getHours();
-            let emoji;
-            if (hour >= 5 && hour < 7) { // Dawn
-                emoji = '🌅';
-            } else if (hour >= 7 && hour < 12) { // Morning
-                emoji = '☀️';
-            } else if (hour >= 12 && hour < 17) { // Afternoon
-                emoji = '😎';
-            } else if (hour >= 17 && hour < 19) { // Dusk
-                emoji = '🌇';
-            } else if (hour >= 19 && hour < 22) { // Evening
-                emoji = '🌆';
-            } else { // Night
-                emoji = '🌙';
-            }
+        <!-- Navigation -->
+        <nav class="terminal-section" aria-label="Site navigation">
+            <div class="terminal-nav">
+                <a href="https://pawel.orzech.me" target="_blank" rel="noopener noreferrer" class="terminal-btn" aria-label="Blog Pawła">
+                    <span class="prompt">&gt; </span>
+                    <span data-translate-key="pawel_blog">Blog Pawła</span>
+                </a>
+                <div class="terminal-btn disabled" aria-label="Strona Pauliny — w budowie">
+                    <span class="prompt">&gt; </span>
+                    <span data-translate-key="paulina_page">Strona Pauliny</span>
+                    <span class="under-construction"><span class="under-construction-text" data-translate-key="under_construction">🚧 W BUDOWIE</span></span>
+                </div>
+            </div>
+        </nav>
 
-            document.getElementById('current-time').textContent = `${timePrefix} ${formattedTime} ${emoji}`;
-        };
+        <div class="ascii-separator" aria-hidden="true">═══════════════════════════════════════════════</div>
 
-        const setLanguage = (lang) => {
-            document.documentElement.lang = lang;
-            document.title = translations[lang].page_title;
+        <!-- Mastodon Feed -->
+        <section class="terminal-section">
+            <div id="mastodon-feed" class="mastodon-terminal" aria-label="Mastodon feed"></div>
+        </section>
 
-            const elementsToTranslate = document.querySelectorAll('[data-translate-key]');
+        <div class="ascii-separator" aria-hidden="true">═══════════════════════════════════════════════</div>
 
-            elementsToTranslate.forEach(el => {
-                const key = el.getAttribute('data-translate-key');
-                const newText = translations[lang][key];
+        <!-- Visitor Counter -->
+        <section class="terminal-section visitor-section">
+            <span data-translate-key="visitor_text">Jesteś gościem numer</span>
+            <span id="visitor-count" class="visitor-counter">001337</span>
+        </section>
 
-                if (el.innerHTML === newText) {
-                    return; // No change, no animation needed
-                }
+        <!-- Marquee -->
+        <div class="marquee-container" aria-hidden="true">
+            <div class="marquee-text" data-translate-key="best_viewed">
+                ★ Najlepiej wyświetlać w Netscape Navigator 4.0 ★ Rozdzielczość 800x600 ★ Najlepiej wyświetlać w Netscape Navigator 4.0 ★
+            </div>
+        </div>
 
-                el.classList.add('fade-out');
-                setTimeout(() => {
-                    el.innerHTML = newText;
-                    el.classList.remove('fade-out');
-                    el.classList.add('fade-in');
-                    setTimeout(() => {
-                        el.classList.remove('fade-in');
-                    }, 300); // Remove fade-in class after animation
-                }, 300); // Wait for fade-out to complete
-            });
+        <!-- Command Prompt -->
+        <section class="terminal-section terminal-prompt">
+            <span class="prompt" data-translate-key="cmd_prompt">C:\ORZECH&gt; </span>
+            <span class="cursor">&#9608;</span>
+        </section>
 
-            // Update tooltip for Paulina's page
-            const paulinaPageDiv = document.querySelector('div > span[data-translate-key="paulina_page"]').parentNode;
-            if (paulinaPageDiv) {
-                paulinaPageDiv.title = translations[lang].paulina_tooltip;
-            }
+    </div>
+</main>
 
-            // Update time display when language changes
-            updateTimeDisplay();
+<!-- ========== FOOTER ========== -->
+<footer class="retro-footer" role="contentinfo">
+    <p>
+        <span data-translate-key="copyright">&copy; 2025 Paulina i Paweł Orzech</span>
+        <span class="separator">|</span>
+        <a href="https://github.com/pawelorzech/orzech.me" target="_blank" rel="noopener noreferrer" aria-label="GitHub repository">GitHub</a>
+        <span class="nut-emoji" id="nut-btn" title="🌰" aria-label="Easter egg" role="button" tabindex="0">🌰</span>
+    </p>
+</footer>
 
-            document.getElementById('lang-pl').classList.toggle('active', lang === 'pl');
-            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
-            localStorage.setItem('language', lang);
-        };
+<!-- ========== NUT EASTER EGG OVERLAY ========== -->
+<div id="nut-overlay" class="easter-egg-overlay hidden" role="dialog" aria-modal="true" aria-label="Easter egg">
+    <div class="easter-egg-window">
+        <div class="terminal-titlebar">
+            <span>ORZECH.EXE</span>
+            <button id="nut-close" class="window-close-btn" aria-label="Close">[×]</button>
+        </div>
+        <pre class="ascii-art">
+    _____
+   /     \
+  | () () |
+  |   △   |
+   \_____/
+  ORZECH.ME
+        </pre>
+    </div>
+</div>
 
-        // --- THEME LOGIC ---
-        let shootingStarInterval; // Declare interval variable
+<script>
+/* ==========================================================================
+   RETRO 90s TERMINAL — JavaScript
+   ========================================================================== */
 
-        const updateThemeButtons = (theme) => {
-            document.getElementById('theme-light').classList.toggle('active', theme === 'light');
-            document.getElementById('theme-dark').classList.toggle('active', theme === 'dark');
-            document.getElementById('theme-system').classList.toggle('active', theme === 'system');
-        };
+/* --- Translations --- */
+const translations = {
+    pl: {
+        title: "Paulina i Paweł Orzech",
+        pawel_blog: "Blog Pawła",
+        paulina_page: "Strona Pauliny",
+        copyright: "© 2025 Paulina i Paweł Orzech",
+        page_title: "Paulina i Paweł Orzech",
+        time_prefix: "Aktualny czas:",
+        visitor_text: "Jesteś gościem numer",
+        latest_mastodon: "Ostatni wpis z Mastodona:",
+        view_mastodon: "Zobacz na Mastodonie",
+        mastodon_error: "Nie można załadować wpisu z Mastodona.",
+        under_construction: "🚧 W BUDOWIE",
+        best_viewed: "★ Najlepiej wyświetlać w Netscape Navigator 4.0 ★ Rozdzielczość 800x600 ★ Najlepiej wyświetlać w Netscape Navigator 4.0 ★",
+        cmd_prompt: "C:\\ORZECH> "
+    },
+    en: {
+        title: "Paulina & Paweł Orzech",
+        pawel_blog: "Paweł's Blog",
+        paulina_page: "Paulina's Page",
+        copyright: "© 2025 Paulina & Paweł Orzech",
+        page_title: "Paulina & Paweł Orzech",
+        time_prefix: "Current time:",
+        visitor_text: "You are visitor",
+        latest_mastodon: "Latest Mastodon post:",
+        view_mastodon: "View on Mastodon",
+        mastodon_error: "Unable to load Mastodon post.",
+        under_construction: "🚧 UNDER CONSTRUCTION",
+        best_viewed: "★ Best viewed in Netscape Navigator 4.0 ★ Resolution 800x600 ★ Best viewed in Netscape Navigator 4.0 ★",
+        cmd_prompt: "C:\\ORZECH> "
+    }
+};
 
-        const isNightTime = () => {
-            const hour = new Date().getHours();
-            return hour >= 20 || hour < 6; // 8 PM to 5:59 AM
-        };
-
-        const setTheme = (theme) => {
-            localStorage.setItem('theme', theme);
-            updateThemeButtons(theme);
-            applyTheme(); // Re-apply the theme logic
-            
-            const isDarkMode = document.documentElement.classList.contains('dark');
-            const isCurrentlyNight = isNightTime();
-
-            if (isDarkMode && isCurrentlyNight) {
-                createStars();
-                startShootingStars();
-                toggleCelestialBodies(false, true);
-            } else if (!isDarkMode) {
-                removeStars();
-                stopShootingStars();
-                toggleCelestialBodies(true, false);
+/* --- Typewriter Effect --- */
+function typeWriter(element, text, speed = 30) {
+    return new Promise(resolve => {
+        let i = 0;
+        element.textContent = '';
+        const interval = setInterval(() => {
+            if (i < text.length) {
+                element.textContent += text[i];
+                i++;
             } else {
-                removeStars();
-                stopShootingStars();
-                toggleCelestialBodies(false, false);
+                clearInterval(interval);
+                resolve();
             }
-        };
+        }, speed);
+    });
+}
 
-        // --- SUN LOGIC ---
-        const toggleCelestialBodies = (showSun, showMoon) => {
-            const sunContainer = document.getElementById('sun-container');
-            let sunElement = document.getElementById('animated-sun');
-            const moonContainer = document.getElementById('moon-container');
-            let moonElement = document.getElementById('animated-moon');
+/* --- Boot Sequence --- */
+async function runBootSequence() {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const alreadyBooted = sessionStorage.getItem('booted');
 
-            if (showSun) {
-                if (!sunElement) {
-                    sunElement = document.createElement('div');
-                    sunElement.id = 'animated-sun';
-                    sunElement.className = 'sun';
-                    sunContainer.appendChild(sunElement);
+    if (prefersReducedMotion || alreadyBooted) {
+        document.getElementById('boot-screen').classList.add('hidden');
+        document.getElementById('main-terminal').style.opacity = '1';
+        return;
+    }
+
+    const bootText = document.getElementById('boot-text');
+    const lines = [
+        'ORZECH BIOS v1.0',
+        'Copyright (C) 2025 Orzech Industries',
+        '',
+        'Checking RAM... 640K OK',
+        'Checking disk... C:\\ OK',
+        'Detecting peripherals... KEYBOARD OK MOUSE OK',
+        '',
+        'Loading ORZECH.ME v2.0...',
+        '',
+    ];
+
+    for (const line of lines) {
+        if (line === '') {
+            bootText.textContent += '\n';
+            await new Promise(r => setTimeout(r, 100));
+        } else {
+            await typeWriter({
+                get textContent() { return ''; },
+                set textContent(val) {
+                    if (val === '') return;
+                    bootText.textContent += val;
                 }
-                sunElement.classList.add('visible');
+            }, line, 20);
+            bootText.textContent += '\n';
+            await new Promise(r => setTimeout(r, 80));
+        }
+    }
+
+    // ASCII progress bar
+    const barWidth = 30;
+    bootText.textContent += '[';
+    for (let i = 0; i < barWidth; i++) {
+        bootText.textContent += '█';
+        await new Promise(r => setTimeout(r, 40));
+    }
+    bootText.textContent += '] 100%\n\n';
+
+    const lang = localStorage.getItem('language') || 'pl';
+    const readyText = lang === 'en' ? 'System ready.' : 'System gotowy.';
+    await typeWriter({
+        get textContent() { return ''; },
+        set textContent(val) {
+            if (val === '') return;
+            bootText.textContent += val;
+        }
+    }, readyText, 40);
+    bootText.textContent += '\n';
+
+    await new Promise(r => setTimeout(r, 600));
+
+    // Fade out boot screen
+    const bootScreen = document.getElementById('boot-screen');
+    bootScreen.style.transition = 'opacity 0.5s ease';
+    bootScreen.style.opacity = '0';
+    await new Promise(r => setTimeout(r, 500));
+    bootScreen.classList.add('hidden');
+
+    // Show main content
+    const mainTerminal = document.getElementById('main-terminal');
+    mainTerminal.style.transition = 'opacity 0.5s ease';
+    mainTerminal.style.opacity = '1';
+
+    sessionStorage.setItem('booted', 'true');
+}
+
+/* --- Theme System --- */
+function setTheme(theme) {
+    // TV static effect
+    const staticOverlay = document.createElement('div');
+    staticOverlay.className = 'tv-static-overlay';
+    document.body.appendChild(staticOverlay);
+    setTimeout(() => staticOverlay.remove(), 400);
+
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+
+    // Update active button
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.theme === theme);
+    });
+
+    // Matrix rain toggle
+    const canvas = document.getElementById('matrix-canvas');
+    if (theme === 'hacker') {
+        canvas.classList.remove('hidden');
+        startMatrixRain();
+    } else {
+        canvas.classList.add('hidden');
+        stopMatrixRain();
+    }
+}
+
+/* --- Matrix Rain --- */
+let matrixAnimationId = null;
+
+function startMatrixRain() {
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const fontSize = 14;
+    const columns = Math.floor(canvas.width / fontSize);
+    const drops = new Array(columns).fill(1);
+
+    function draw() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#00ff41';
+        ctx.font = fontSize + 'px VT323';
+
+        for (let i = 0; i < drops.length; i++) {
+            const text = chars[Math.floor(Math.random() * chars.length)];
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                drops[i] = 0;
+            }
+            drops[i]++;
+        }
+        matrixAnimationId = requestAnimationFrame(draw);
+    }
+
+    if (matrixAnimationId) cancelAnimationFrame(matrixAnimationId);
+    draw();
+}
+
+function stopMatrixRain() {
+    if (matrixAnimationId) {
+        cancelAnimationFrame(matrixAnimationId);
+        matrixAnimationId = null;
+    }
+}
+
+/* --- Language System --- */
+function setLanguage(lang) {
+    document.documentElement.lang = lang;
+    document.title = translations[lang].page_title;
+
+    document.querySelectorAll('[data-translate-key]').forEach(el => {
+        const key = el.getAttribute('data-translate-key');
+        const newText = translations[lang][key];
+        if (newText && el.innerHTML !== newText) {
+            el.style.opacity = '0';
+            setTimeout(() => {
+                el.innerHTML = newText;
+                el.style.opacity = '1';
+            }, 200);
+        }
+    });
+
+    // Update active button
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+
+    localStorage.setItem('language', lang);
+    updateTimeDisplay();
+}
+
+/* --- Clock --- */
+function updateTimeDisplay() {
+    const now = new Date();
+    const lang = document.documentElement.lang;
+    const prefix = translations[lang].time_prefix;
+
+    const h = String(now.getHours()).padStart(2, '0');
+    const m = String(now.getMinutes()).padStart(2, '0');
+    const s = String(now.getSeconds()).padStart(2, '0');
+
+    const hour = now.getHours();
+    let emoji;
+    if (hour >= 5 && hour < 7) emoji = '🌅';
+    else if (hour >= 7 && hour < 12) emoji = '☀️';
+    else if (hour >= 12 && hour < 17) emoji = '😎';
+    else if (hour >= 17 && hour < 19) emoji = '🌇';
+    else if (hour >= 19 && hour < 22) emoji = '🌆';
+    else emoji = '🌙';
+
+    const el = document.getElementById('current-time');
+    if (el) el.textContent = `${prefix} [${h}:${m}:${s}] ${emoji}`;
+}
+
+/* --- Visitor Counter --- */
+function initVisitorCounter() {
+    let count = parseInt(localStorage.getItem('visitor_count') || '0', 10);
+    if (count === 0) count = 1337;
+    count++;
+    localStorage.setItem('visitor_count', String(count));
+    const el = document.getElementById('visitor-count');
+    if (el) el.textContent = '#' + String(count).padStart(6, '0');
+}
+
+/* --- Mastodon Feed --- */
+function fetchMastodonFeed() {
+    const feedContainer = document.getElementById('mastodon-feed');
+    const rssUrl = 'https://wspanialy.eu/users/pawel.rss';
+    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(rssUrl)}`;
+    const lang = document.documentElement.lang;
+
+    fetch(proxyUrl)
+        .then(r => {
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            return r.text();
+        })
+        .then(str => {
+            const xmlDoc = new DOMParser().parseFromString(str, 'application/xml');
+            if (xmlDoc.querySelector('parsererror')) throw new Error('XML parse error');
+
+            const items = xmlDoc.querySelectorAll('item');
+            if (items.length > 0) {
+                const latest = items[0];
+                const description = latest.querySelector('description').textContent;
+                const link = latest.querySelector('link').textContent;
+
+                const title = translations[lang].latest_mastodon;
+                const linkText = translations[lang].view_mastodon;
+
+                // Strip HTML from description for terminal feel
+                const temp = document.createElement('div');
+                temp.innerHTML = description;
+                const plainText = temp.textContent || temp.innerText || '';
+
+                feedContainer.innerHTML = `
+                    <div class="text-dim" style="margin-bottom:0.5rem;">${title}</div>
+                    <div class="mastodon-quote">> ${plainText.substring(0, 300)}${plainText.length > 300 ? '...' : ''}</div>
+                    <a href="${link}" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:0.5rem;">[${linkText}]</a>
+                `;
             } else {
-                if (sunElement) {
-                    sunElement.classList.remove('visible');
-                }
+                throw new Error('No items');
             }
-
-            if (showMoon) {
-                if (!moonElement) {
-                    moonElement = document.createElement('div');
-                    moonElement.id = 'animated-moon';
-                    moonElement.className = 'moon';
-                    moonContainer.appendChild(moonElement);
-                }
-                moonElement.classList.add('visible');
-            } else {
-                if (moonElement) {
-                    moonElement.classList.remove('visible');
-                }
-            }
-        };
-
-        // --- STAR ANIMATION LOGIC ---
-        const createStars = () => {
-            const starContainer = document.getElementById('star-container');
-            starContainer.innerHTML = ''; // Clear existing stars
-            const numStars = 25; // Further reduced number of stars
-
-            for (let i = 0; i < numStars; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                const size = Math.random() * 1.5 + 0.5; // 0.5 to 2px, even smaller
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-                star.style.left = `${Math.random() * 100}%`;
-                star.style.top = `${Math.random() * 100}%`;
-                star.style.animationDelay = `${Math.random() * 8}s`; // Even longer random delay
-                star.style.animationDuration = `${Math.random() * 6 + 3}s`; // Even slower random duration
-                starContainer.appendChild(star);
-            }
-        };
-
-        const removeStars = () => {
-            const starContainer = document.getElementById('star-container');
-            starContainer.innerHTML = ''; // Remove all stars
-        };
-
-        // --- SHOOTING STAR LOGIC ---
-        const createShootingStar = () => {
-            const starContainer = document.getElementById('star-container');
-            const shootingStar = document.createElement('div');
-            shootingStar.className = 'shooting-star';
-            
-            // Random start position (top-left quadrant for diagonal movement)
-            const startX = Math.random() * window.innerWidth * 0.7; // Up to 70% of width
-            const startY = Math.random() * window.innerHeight * 0.3; // Up to 30% of height
-            shootingStar.style.left = `${startX}px`;
-            shootingStar.style.top = `${startY}px`;
-
-            // Random duration for animation
-            shootingStar.style.animationDuration = `${Math.random() * 1.5 + 1}s`; // 1 to 2.5 seconds
-            shootingStar.style.animationDelay = `${Math.random() * 0.5}s`; // Small random delay
-
-            starContainer.appendChild(shootingStar);
-
-            // Remove the shooting star after its animation to prevent DOM clutter
-            shootingStar.addEventListener('animationend', () => {
-                shootingStar.remove();
-            });
-        };
-
-        const startShootingStars = () => {
-            if (!shootingStarInterval) {
-                shootingStarInterval = setInterval(() => {
-                    if (document.documentElement.classList.contains('dark') && isNightTime()) {
-                        createShootingStar();
-                    } else {
-                        stopShootingStars(); // Stop if conditions are no longer met
-                    }
-                }, 9000); // Every 9 seconds
-            }
-        };
-
-        const stopShootingStars = () => {
-            if (shootingStarInterval) {
-                clearInterval(shootingStarInterval);
-                shootingStarInterval = null;
-            }
-        };
-
-        // --- ON LOAD INITIALIZATION ---
-        window.addEventListener('load', () => {
-            // Animate content
-            const content = document.getElementById('content');
-            const footer = document.getElementById('footer');
-            setTimeout(() => content.classList.add('animate-in'), 100);
-            setTimeout(() => footer.classList.add('animate-in'), 400);
-
-            // Initialize Language
-            const savedLang = localStorage.getItem('language') || 'pl';
-            setLanguage(savedLang);
-
-            // Initialize Theme
-            const savedTheme = localStorage.getItem('theme') || 'system';
-            updateThemeButtons(savedTheme);
-            // Call applyTheme and createStars/ShootingStars initially based on savedTheme and time
-            applyTheme();
-            // Initial check for stars, shooting stars, and sun based on current theme and time
-            const isDarkModeInitial = document.documentElement.classList.contains('dark');
-            const isCurrentlyNightInitial = isNightTime();
-
-            if (isDarkModeInitial && isCurrentlyNightInitial) {
-                createStars();
-                startShootingStars();
-                toggleCelestialBodies(false, true);
-            } else if (!isDarkModeInitial) {
-                removeStars();
-                stopShootingStars();
-                toggleCelestialBodies(true, false);
-            } else {
-                removeStars();
-                stopShootingStars();
-                toggleCelestialBodies(false, false);
-            }
-
-            // Add event listeners
-            document.getElementById('lang-pl').addEventListener('click', () => setLanguage('pl'));
-            document.getElementById('lang-en').addEventListener('click', () => setLanguage('en'));
-            document.getElementById('theme-light').addEventListener('click', () => setTheme('light'));
-            document.getElementById('theme-dark').addEventListener('click', () => setTheme('dark'));
-            document.getElementById('theme-system').addEventListener('click', () => setTheme('system'));
-
-            // Listen for system theme changes
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-                if (localStorage.getItem('theme') === 'system') {
-                    applyTheme();
-                    const isDarkMode = document.documentElement.classList.contains('dark');
-                    const isCurrentlyNight = isNightTime();
-                    if (isDarkMode && isCurrentlyNight) {
-                        createStars();
-                        startShootingStars();
-                        toggleCelestialBodies(false, true);
-                    } else if (!isDarkMode) {
-                        removeStars();
-                        stopShootingStars();
-                        toggleCelestialBodies(true, false);
-                    } else {
-                        removeStars();
-                        stopShootingStars();
-                        toggleCelestialBodies(false, false);
-                    }
-                }
-            });
-
-            // Update time every minute
-            setInterval(updateTimeDisplay, 60000);
-
-            // Fetch Mastodon feed
-            fetchMastodonFeed();
+        })
+        .catch(() => {
+            feedContainer.innerHTML = `<span class="text-dim">${translations[lang].mastodon_error}</span>`;
         });
+}
 
-        // --- MASTODON FEED LOGIC ---
-        const fetchMastodonFeed = () => {
-            const feedContainer = document.getElementById('mastodon-feed');
-            const rssUrl = 'https://wspanialy.eu/users/pawel.rss';
-            // Using a different CORS proxy
-            const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(rssUrl)}`;
+/* --- Random Glitch Effect --- */
+let glitchTimer = null;
 
-            fetch(proxyUrl)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Network response was not ok. Status: ${response.status}`);
-                    }
-                    return response.text(); // Get the response as raw text
-                })
-                .then(str => {
-                    const parser = new DOMParser();
-                    const xmlDoc = parser.parseFromString(str, "application/xml");
+function startGlitchEffect() {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
 
-                    const parserError = xmlDoc.querySelector("parsererror");
-                    if (parserError) {
-                        console.error("XML Parsing Error:", parserError.textContent);
-                        throw new Error("Failed to parse XML feed.");
-                    }
+    function doGlitch() {
+        const sections = document.querySelectorAll('.terminal-section');
+        if (sections.length === 0) return;
+        const target = sections[Math.floor(Math.random() * sections.length)];
+        target.classList.add('glitch-active');
+        setTimeout(() => target.classList.remove('glitch-active'), 150);
 
-                    const items = xmlDoc.querySelectorAll("item");
-                    if (items.length > 0) {
-                        const latestPost = items[0];
-                        const description = latestPost.querySelector("description").textContent;
-                        const link = latestPost.querySelector("link").textContent;
+        const nextDelay = Math.random() * 7000 + 8000; // 8-15s
+        glitchTimer = setTimeout(doGlitch, nextDelay);
+    }
 
-                        const currentLang = document.documentElement.lang;
-                        const title = currentLang === 'pl' ? 'Ostatni wpis z Mastodona:' : 'Latest Mastodon post:';
-                        const linkText = currentLang === 'pl' ? 'Zobacz na Mastodonie' : 'View on Mastodon';
-                        
-                        feedContainer.innerHTML = `
-                            <p class="font-semibold mb-2 text-left">${title}</p>
-                            <div class="p-4 border rounded-lg shadow-md bg-white dark:bg-gray-700 text-left">
-                                ${description}
-                                <a href="${link}" target="_blank" rel="noopener noreferrer" class="text-blue-500 dark:text-blue-400 hover:underline block mt-2">${linkText}</a>
-                            </div>
-                        `;
-                    } else {
-                        throw new Error("No <item> elements found in the RSS feed.");
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching Mastodon feed:', error);
-                    const currentLang = document.documentElement.lang;
-                    const errorMsg = currentLang === 'pl' 
-                        ? '<p>Nie można załadować wpisu z Mastodona.</p>'
-                        : '<p>Unable to load Mastodon post.</p>';
-                    feedContainer.innerHTML = errorMsg;
-                });
-        };
-    </script>
+    glitchTimer = setTimeout(doGlitch, 5000);
+}
+
+/* --- Easter Eggs --- */
+
+// Konami code
+const konamiSequence = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','KeyB','KeyA'];
+let konamiIndex = 0;
+
+function initKonamiCode() {
+    document.addEventListener('keydown', (e) => {
+        if (e.code === konamiSequence[konamiIndex]) {
+            konamiIndex++;
+            if (konamiIndex === konamiSequence.length) {
+                konamiIndex = 0;
+                triggerKonamiEasterEgg();
+            }
+        } else {
+            konamiIndex = 0;
+        }
+    });
+}
+
+function triggerKonamiEasterEgg() {
+    const flash = document.createElement('div');
+    flash.style.cssText = 'position:fixed;inset:0;z-index:10003;pointer-events:none;animation:konami-flash 1.5s ease forwards;';
+    document.body.appendChild(flash);
+    setTimeout(() => flash.remove(), 1500);
+
+    // Show a secret message
+    const msg = document.createElement('div');
+    msg.style.cssText = `position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10004;
+        font-family:'Press Start 2P',monospace;font-size:1.2rem;color:#ff00ff;text-align:center;
+        text-shadow:0 0 20px #ff00ff,0 0 40px #ff00ff;pointer-events:none;`;
+    msg.innerHTML = '★ KONAMI CODE ACTIVATED ★<br><br>YOU FOUND THE SECRET!<br><br>🌰🌰🌰';
+    document.body.appendChild(msg);
+    setTimeout(() => msg.remove(), 3000);
+}
+
+// Nut easter egg
+function initNutEasterEgg() {
+    const nutBtn = document.getElementById('nut-btn');
+    const nutOverlay = document.getElementById('nut-overlay');
+    const nutClose = document.getElementById('nut-close');
+
+    nutBtn.addEventListener('click', () => nutOverlay.classList.remove('hidden'));
+    nutBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') nutOverlay.classList.remove('hidden');
+    });
+
+    nutClose.addEventListener('click', () => nutOverlay.classList.add('hidden'));
+    nutOverlay.addEventListener('click', (e) => {
+        if (e.target === nutOverlay) nutOverlay.classList.add('hidden');
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') nutOverlay.classList.add('hidden');
+    });
+}
+
+/* --- Resize handler for matrix rain --- */
+function handleResize() {
+    const canvas = document.getElementById('matrix-canvas');
+    if (!canvas.classList.contains('hidden')) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+}
+
+/* --- Initialize Everything --- */
+window.addEventListener('load', async () => {
+    // Run boot sequence (handles skip logic internally)
+    await runBootSequence();
+
+    // Init theme
+    const savedTheme = localStorage.getItem('theme') || 'green';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.theme === savedTheme);
+    });
+    if (savedTheme === 'hacker') {
+        document.getElementById('matrix-canvas').classList.remove('hidden');
+        startMatrixRain();
+    }
+
+    // Init language
+    const savedLang = localStorage.getItem('language') || 'pl';
+    setLanguage(savedLang);
+
+    // Init clock
+    updateTimeDisplay();
+    setInterval(updateTimeDisplay, 1000);
+
+    // Init visitor counter
+    initVisitorCounter();
+
+    // Fetch Mastodon feed
+    fetchMastodonFeed();
+
+    // Theme buttons
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.addEventListener('click', () => setTheme(btn.dataset.theme));
+    });
+
+    // Language buttons
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+    });
+
+    // Easter eggs
+    initKonamiCode();
+    initNutEasterEgg();
+
+    // Glitch effect
+    startGlitchEffect();
+
+    // Resize
+    window.addEventListener('resize', handleResize);
+});
+</script>
 
 </body>
 </html>
